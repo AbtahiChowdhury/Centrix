@@ -51,10 +51,12 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Game")
         {
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
         else
         {
+            Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         isGameOver = false;
