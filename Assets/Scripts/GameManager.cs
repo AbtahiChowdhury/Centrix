@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
+    public bool isGameOver;
+    public float xSensitivity { get; private set; }
+    public float ySensitivity { get; private set; }
+   
+
     public static GameManager Instance { get { return instance; } }
 
     public AudioClip audioClip;
@@ -29,7 +35,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance != null && instance !=this)
+        xSensitivity = ySensitivity = 1.0f;
+        if (instance != null && instance !=this)
         {
             Destroy(this.gameObject);
         }
@@ -42,6 +49,16 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (SceneManager.GetActiveScene().name == "Game")
+        {
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.visible = true;
+        }
+        isGameOver = false;
+
         audioListener = GetComponent<AudioListener>();
         spectrum = new float[numberOfSamples];
 
@@ -90,6 +107,33 @@ public class GameManager : MonoBehaviour
         speed = speedMultiplier * Mathf.Lerp(1f, 3f, avg * 50f);
         //Debug.Log(avg);
 
-        Debug.Log(songPosInBeats);
+       // Debug.Log(songPosInBeats);
     }
+
+    //Game Over Menu
+    public void EndGame()
+    {
+        isGameOver = true;
+        if (isGameOver)
+        {
+            isGameOver = false;
+            Debug.Log("GAME OVER");
+            Cursor.lockState = CursorLockMode.None;
+            SceneManager.LoadScene("GameOver"); //TODO: Make this scene
+        }
+
+    }
+
+    //For Menu Start/Restart Game
+    public void StartGame()
+    {
+        SceneManager.LoadScene("Game");
+    }
+    
+    public void ExitGame()
+    {//Close the application        
+        Application.Quit();
+    }
+
+
 }
