@@ -14,18 +14,58 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get { return instance; } }
 
-    public AudioClip audioClip;
+    public AudioClip[] audioClip;
     AudioSource audioSource;
     AudioListener audioListener;
 
-    public float speedMultiplier;
+    public GameObject spawnerPrefab;
+    public GameObject bulletPrefab;
+
     public float speed { get; set; }
 
-    public float BPM;
-    public float songPosInBeats;
+    float BPM;
     float secPerBeat;
     float dsptimesong;
     float songPosition;
+
+    public float spawnerRotationSpeed { get; set; }
+    int numberOfSpawners;
+    GameObject[] spawnerArray;
+
+    struct SpawnerRotationSpeedEventParameters
+    {
+        public float beat { get; set; }
+        public float speed { get; set; }
+
+        public SpawnerRotationSpeedEventParameters(float beat, float speed)
+        {
+            this.beat = beat;
+            this.speed = speed;
+        }
+    }
+    ArrayList spawnerRotationSpeedEvents;
+    int spawnerRotationSpeedEventsIndex;
+
+    public float bulletSpeed { get; set; }
+
+    struct BulletSpawnEventParameters
+    {
+        public float beat { get; set; }
+        public int spawner { get; set; }
+        public float theta { get; set; }
+
+        public BulletSpawnEventParameters(float beat, int spawner, float theta)
+        {
+            this.beat = beat;
+            this.spawner = spawner;
+            this.theta = theta;
+        }
+    }
+    ArrayList bulletSpawnEvents;
+    int bulletSpawnEventsIndex;
+
+    public int levelIndex;
+    public float songPosInBeats;
 
     public int numberOfSamples;
     public float[] spectrum { get; set; }
@@ -35,7 +75,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        xSensitivity = ySensitivity = 1.0f;
+        xSensitivity = ySensitivity = 100.0f;
         if (instance != null && instance !=this)
         {
             Destroy(this.gameObject);
@@ -65,9 +105,10 @@ public class GameManager : MonoBehaviour
         spectrum = new float[numberOfSamples];
 
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = audioClip;
 
         speed = 1f;
+
+        SetUpLevel();
 
         if (debugMode)
         {
@@ -98,6 +139,7 @@ public class GameManager : MonoBehaviour
             songPosition = (float)(AudioSettings.dspTime - dsptimesong);
             songPosInBeats = songPosition / secPerBeat;
         }
+        //Debug.Log(songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -106,10 +148,11 @@ public class GameManager : MonoBehaviour
             avg += spectrum[i];
         }
         avg /= (numberOfSamples / 4);
-        speed = speedMultiplier * Mathf.Lerp(1f, 3f, avg * 50f);
-        //Debug.Log(avg);
+        speed = Mathf.Lerp(1f, 3f, avg * 50f);
 
-       // Debug.Log(songPosInBeats);
+
+        CheckForSpawnerSpeedChangeEvent();
+        CheckForBulletSpawnEvent();
     }
 
     //Game Over Menu
@@ -137,5 +180,84 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
+    void SetUpLevel()
+    {
+        spawnerRotationSpeedEventsIndex = 0;
+        spawnerRotationSpeedEvents = new ArrayList();
 
+        bulletSpawnEventsIndex = 0;
+        bulletSpawnEvents = new ArrayList();
+
+        switch (levelIndex)
+        {
+            case 0:
+                //level 1 - samsara
+                Level1();
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
+    }
+
+    void CreateSpawners()
+    {
+        for(int i = 0; i < numberOfSpawners; i++)
+        {
+            spawnerArray[i] = Instantiate(spawnerPrefab);
+            spawnerArray[i].transform.Rotate(0, 0, i * (360 / numberOfSpawners));
+            spawnerArray[i].GetComponent<Spawner>().theta = i * (360 / numberOfSpawners);
+        }
+    }
+
+    void CheckForSpawnerSpeedChangeEvent()
+    {
+        if (spawnerRotationSpeedEventsIndex < spawnerRotationSpeedEvents.Count && songPosInBeats > ((SpawnerRotationSpeedEventParameters)spawnerRotationSpeedEvents[spawnerRotationSpeedEventsIndex]).beat)
+        {
+            spawnerRotationSpeed = ((SpawnerRotationSpeedEventParameters)spawnerRotationSpeedEvents[spawnerRotationSpeedEventsIndex]).speed;
+            spawnerRotationSpeedEventsIndex++;
+        }
+    }
+
+    void CheckForBulletSpawnEvent()
+    {
+        while (bulletSpawnEventsIndex < bulletSpawnEvents.Count && songPosInBeats > ((BulletSpawnEventParameters)bulletSpawnEvents[bulletSpawnEventsIndex]).beat)
+        {
+            spawnerArray[((BulletSpawnEventParameters)bulletSpawnEvents[bulletSpawnEventsIndex]).spawner].GetComponent<Spawner>().SpawnBullet(((BulletSpawnEventParameters)bulletSpawnEvents[bulletSpawnEventsIndex]).theta);
+            bulletSpawnEventsIndex++;
+        }
+    }
+
+    void Level1()
+    {
+        audioSource.clip = audioClip[levelIndex];
+        BPM = 170f;
+
+        numberOfSpawners = 6;
+        spawnerArray = new GameObject[numberOfSpawners];
+        CreateSpawners();
+
+        spawnerRotationSpeed = 30f;
+        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(49f, -60f));
+        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(58f, 60f));
+        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(60f, -60f));
+        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(62f, 60f));
+        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(64f, -60f));
+        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(66f, 60f));
+
+        bulletSpeed = 3f;
+
+        for (float i = 49f; i < 66f; i += 0.5f)
+        {
+            for (int j = 0; j < numberOfSpawners; j++)
+            {
+                bulletSpawnEvents.Add(new BulletSpawnEventParameters(i, j, 25f - (i - 49f)));
+            }
+        }
+    }
 }

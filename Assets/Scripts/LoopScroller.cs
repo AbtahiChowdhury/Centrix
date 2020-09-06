@@ -13,16 +13,16 @@ public class LoopScroller : MonoBehaviour
     {
         time = 0;
         startScale = new Vector3(0.75f, 0.75f, 0f);
-        endScale = new Vector3(2.01f, 2.01f, 0f);
+        endScale = new Vector3(3.01f, 3.01f, 0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        time += 0.25f * GameManager.Instance.speed * Time.deltaTime;
+        time += 0.2f * GameManager.Instance.speed * Time.deltaTime;
         transform.localScale = Vector3.Lerp(startScale, endScale, time);
 
-        if(transform.localScale.x > 2f)
+        if(transform.localScale.x > 3f)
         {
             Destroy(this.gameObject);
         }
