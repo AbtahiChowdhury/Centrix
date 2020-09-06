@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerInput : MonoBehaviour
 {//Get all user inputs
     private PlayerControls controls;
-    private bool isMouseControl = true;
+    private bool isGamepad = false;
     public Vector2 move;
 
     private void Awake()
@@ -19,27 +19,38 @@ public class PlayerInput : MonoBehaviour
 
         controls.Gameplay.Move.performed += ctx => JoyStickMove(ctx);
         controls.Gameplay.Move.canceled += ctx => JoyStickStop();
-    
+
 
     }
     // Update is called once per frame
     void Update()
     {
-        if (isMouseControl)
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+        float horizontal = Input.GetAxis("Vertical");
+        float vertical = Input.GetAxis("Horizontal");
+        if (!isGamepad && vertical == 0 && horizontal == 0)
         {
-            move = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            move = new Vector2(mouseX, mouseY);
         }
+        else if (!isGamepad && mouseX == 0 && mouseY == 0)
+
+        {
+            move = new Vector2(vertical, horizontal);
+
+        }
+
     }
 
     void JoyStickMove(InputAction.CallbackContext ctx)
     {
-        isMouseControl = false;
+        isGamepad = true;
         move = ctx.ReadValue<Vector2>();
     }
 
     void JoyStickStop()
     {
-        isMouseControl = true;
+        isGamepad = false;
         move = Vector2.zero;
     }
 
