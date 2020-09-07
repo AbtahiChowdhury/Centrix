@@ -30,7 +30,12 @@ public class GameManager : MonoBehaviour
 
     public float spawnerRotationSpeed { get; set; }
     int numberOfSpawners;
-    GameObject[] spawnerArray;
+    static GameObject[] spawnerArray;
+
+    public static GameObject[] getSpawners ()
+    {
+        return spawnerArray;
+    }
 
     struct SpawnerRotationSpeedEventParameters
     {

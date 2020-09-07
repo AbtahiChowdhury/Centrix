@@ -24,7 +24,9 @@ public class AudioSyncer : MonoBehaviour
     /// </summary>
     public virtual void OnBeat()
     {
+
         StartCoroutine(FindObjectOfType<Stage>().BeatAnimation());
+        StartCoroutine(FindObjectOfType<Stage>().BeatSpawner());
         m_timer = 0;
         m_isBeat = true;
     }
