@@ -261,7 +261,7 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < numberOfSpawners; j++)
             {
-                bulletSpawnEvents.Add(new BulletSpawnEventParameters(i, j, 25f - (i - 49f)));
+                //bulletSpawnEvents.Add(new BulletSpawnEventParameters(i, j, 25f - (i - 49f)));
             }
         }
     }

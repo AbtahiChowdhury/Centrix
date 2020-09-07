@@ -457,8 +457,8 @@ MonoBehaviour:
   levelIndex: 0
   songPosInBeats: 0
   numberOfSamples: 256
-  debugMode: 1
-  startTimeInSeconds: 15
+  debugMode: 0
+  startTimeInSeconds: 90
 --- !u!4 &1706324499
 Transform:
   m_ObjectHideFlags: 0
@@ -610,6 +610,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3218189718736400864, guid: f1bdd5cf2c64d444a8a82b0b3a6c9fca,
+        type: 3}
+      propertyPath: mouseSensitivity
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 3218189718736400865, guid: f1bdd5cf2c64d444a8a82b0b3a6c9fca,
         type: 3}
       propertyPath: m_LocalPosition.x

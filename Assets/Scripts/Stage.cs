@@ -30,17 +30,18 @@ public class Stage : MonoBehaviour
         GameObject[] spawners = GameManager.getSpawners();
         int index = random.Next(0, spawners.Length);
         spawners[index].GetComponentInChildren<SpriteRenderer>().color = color;
+        spawners[index].transform.Find("Triangle").GetComponent<SpriteRenderer>().color = color;
 
         //Trying to spawn multiple bullets for the selected spawner circle
-        for(int i= 0; i<10; i++)
+        for(int i= -20; i<20; i+=10)
         {
-            spawners[index].GetComponent<Spawner>().SpawnBullet(1);
+            spawners[index].GetComponent<Spawner>().SpawnBullet(i);
         }
 
         yield return new WaitForSeconds(0.5f);
         //Reset Color
         spawners[index].GetComponentInChildren<SpriteRenderer>().color = Color.black;
-
+        spawners[index].transform.Find("Triangle").GetComponent<SpriteRenderer>().color = Color.black;
     }
 
     public IEnumerator BeatAnimation() //// This method is called by AudioSyncer on every beat

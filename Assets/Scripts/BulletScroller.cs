@@ -16,7 +16,7 @@ public class BulletScroller : MonoBehaviour
     void Update()
     {
         transform.position += (GameManager.Instance.bulletSpeed * Time.deltaTime) * direction;
-        transform.Find("Square").transform.Rotate(0, 0, GameManager.Instance.bulletSpeed * Time.deltaTime);
+        transform.Find("Square").transform.Rotate(0, 0, 100f * GameManager.Instance.bulletSpeed * Time.deltaTime);
 
         if (transform.position.sqrMagnitude > 25f)
         {
