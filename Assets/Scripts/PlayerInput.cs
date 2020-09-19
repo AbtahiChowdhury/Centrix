@@ -34,12 +34,9 @@ public class PlayerInput : MonoBehaviour
             move = new Vector2(mouseX, mouseY);
         }
         else if (!isGamepad && mouseX == 0 && mouseY == 0)
-
         {
             move = new Vector2(vertical, horizontal);
-
         }
-
     }
 
     void JoyStickMove(InputAction.CallbackContext ctx)
