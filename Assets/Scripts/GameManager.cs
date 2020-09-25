@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
             songPosition = (float)(AudioSettings.dspTime - dsptimesong);
             songPosInBeats = songPosition / secPerBeat;
         }
-        //Debug.Log(songPosInBeats);
+        Debug.Log(songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -193,6 +193,7 @@ public class GameManager : MonoBehaviour
         bulletSpawnEventsIndex = 0;
         bulletSpawnEvents = new ArrayList();
 
+        audioSource.clip = audioClip[levelIndex];
         switch (levelIndex)
         {
             case 0:
@@ -240,29 +241,57 @@ public class GameManager : MonoBehaviour
 
     void Level1()
     {
+        //Initial level setup
         audioSource.clip = audioClip[levelIndex];
         BPM = 170f;
 
-        numberOfSpawners = 6;
+        numberOfSpawners = 10;
         spawnerArray = new GameObject[numberOfSpawners];
         CreateSpawners();
 
-        spawnerRotationSpeed = 30f;
-        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(49f, -60f));
-        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(58f, 60f));
-        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(60f, -60f));
-        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(62f, 60f));
-        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(64f, -60f));
-        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(66f, 60f));
+        //Spawner movement
+        spawnerRotationSpeed = 10f;
 
+        EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 100, 10f, 30f);
+
+        EnqueueSpawnerRotationSpeedEvent(49f, -60f);
+        EnqueueSpawnerRotationSpeedEvent(58f, 60f);
+        EnqueueSpawnerRotationSpeedEvent(60f, -60f);
+        EnqueueSpawnerRotationSpeedEvent(62f, 60f);
+        EnqueueSpawnerRotationSpeedEvent(64f, -60f);
+        EnqueueSpawnerRotationSpeedEvent(67f, 60f);
+
+        //Bullet spawning
         bulletSpeed = 3f;
-
         for (float i = 49f; i < 66f; i += 0.5f)
         {
             for (int j = 0; j < numberOfSpawners; j++)
             {
-                //bulletSpawnEvents.Add(new BulletSpawnEventParameters(i, j, 25f - (i - 49f)));
+                EnqueueBulletSpawnEvent(i, j, 20f - (i - 49f));
             }
         }
+    }
+
+
+
+    void EnqueueBulletSpawnEvent(float beat, int spawner, float offset)
+    {
+        bulletSpawnEvents.Add(new BulletSpawnEventParameters(beat, spawner, offset));
+    }
+
+    void EnqueueSpawnerRotationSpeedEvent(float beat, float speed)
+    {
+        spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(beat, speed));
+    }
+
+    void EnqueueSpawnerRotationSpeedEventOverTime(float startBeat, float endBeat, int numberOfSteps, float startSpeed, float endSpeed)
+    {
+        int counter = 0;
+        for (float i = startBeat; i < endBeat; i += (endBeat - startBeat) / numberOfSteps)
+        {
+            EnqueueSpawnerRotationSpeedEvent(i, startSpeed + (counter * (endBeat / numberOfSteps)));
+            counter++;
+        }
+        counter = 0;
     }
 }

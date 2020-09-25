@@ -450,6 +450,8 @@ MonoBehaviour:
   audioClip:
   - {fileID: 8300000, guid: f022d195e9220ea42b1fb1692dee9f64, type: 3}
   - {fileID: 8300000, guid: ed4278e52e278d24e86eae36cdc26e1f, type: 3}
+  - {fileID: 8300000, guid: b86f08b7404e1774d94a10f516c36ede, type: 3}
+  - {fileID: 8300000, guid: 513511c386d44a84090ab55332030a21, type: 3}
   spawnerPrefab: {fileID: 8934387210265935112, guid: 0e7ac8442a4885444af7e5116c866b25,
     type: 3}
   bulletPrefab: {fileID: 505250954407813139, guid: df28725a25113274a8ec2bfc3d28c105,
@@ -458,7 +460,7 @@ MonoBehaviour:
   songPosInBeats: 0
   numberOfSamples: 256
   debugMode: 0
-  startTimeInSeconds: 90
+  startTimeInSeconds: 15
 --- !u!4 &1706324499
 Transform:
   m_ObjectHideFlags: 0
