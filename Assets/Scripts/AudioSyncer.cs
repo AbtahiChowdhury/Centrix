@@ -26,7 +26,7 @@ public class AudioSyncer : MonoBehaviour
     {
 
         StartCoroutine(FindObjectOfType<Stage>().BeatAnimation());
-        //StartCoroutine(FindObjectOfType<Stage>().BeatSpawner());
+        StartCoroutine(FindObjectOfType<Stage>().BeatSpawner());
         m_timer = 0;
         m_isBeat = true;
     }

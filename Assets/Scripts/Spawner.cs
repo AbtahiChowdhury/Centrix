@@ -31,22 +31,5 @@ public class Spawner : MonoBehaviour
         GameObject bullet = Instantiate(GameManager.Instance.bulletPrefab);
         bullet.transform.position = position;
         bullet.GetComponent<BulletScroller>().direction = direction;
-
-        UpdateColors();
-    }
-
-    IEnumerator UpdateColors()
-    {
-        //Random color for a randomly selected spawner
-        Color color = Random.ColorHSV(0f, 1f, 1f, 1f, .75f, 1f);
-        System.Random random = new System.Random();
-        transform.Find("Circle1").GetComponent<SpriteRenderer>().color = color;
-        transform.Find("Triangle").GetComponent<SpriteRenderer>().color = color;
-
-        yield return new WaitForSeconds(0.5f);
-
-        //Reset Color
-        transform.Find("Circle1").GetComponent<SpriteRenderer>().color = Color.black;
-        transform.Find("Triangle").GetComponent<SpriteRenderer>().color = Color.black;
     }
 }

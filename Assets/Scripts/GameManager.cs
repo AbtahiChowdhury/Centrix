@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public GameObject bulletPrefab;
 
     public float speed { get; set; }
+    public int difficulty { get; set; }
 
     float BPM;
     float secPerBeat;
@@ -205,6 +206,7 @@ public class GameManager : MonoBehaviour
             case 2:
                 break;
             case 3:
+                Level4();
                 break;
             default:
                 break;
@@ -244,14 +246,54 @@ public class GameManager : MonoBehaviour
         //Initial level setup
         audioSource.clip = audioClip[levelIndex];
         BPM = 170f;
+        difficulty = 1;
+        bulletSpeed = 3f;
+        spawnerRotationSpeed = 10f;
 
-        numberOfSpawners = 10;
+        numberOfSpawners = 6;
         spawnerArray = new GameObject[numberOfSpawners];
         CreateSpawners();
 
         //Spawner movement
-        spawnerRotationSpeed = 10f;
+        EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 100, 10f, 30f);
 
+        EnqueueSpawnerRotationSpeedEvent(49f, -60f);
+        EnqueueSpawnerRotationSpeedEvent(58f, 60f);
+        EnqueueSpawnerRotationSpeedEvent(60f, -60f);
+        EnqueueSpawnerRotationSpeedEvent(62f, 60f);
+        EnqueueSpawnerRotationSpeedEvent(64f, -60f);
+        EnqueueSpawnerRotationSpeedEvent(67f, 60f);
+
+        //Bullet spawning
+        for (float i = 49f; i < 180f; i += 0.5f)
+        {
+            for (int j = 0; j < numberOfSpawners; j++)
+            {
+                EnqueueBulletSpawnEvent(i, j, 35f);
+            }
+        }
+    }
+
+    void Level4()
+    {
+        //Initial level setup
+        audioSource.clip = audioClip[levelIndex];
+        BPM = 135f;
+        difficulty = 1;
+        bulletSpeed = 3f;
+        spawnerRotationSpeed = 100f;
+
+        numberOfSpawners = 8;
+        spawnerArray = new GameObject[numberOfSpawners];
+        CreateSpawners();
+
+        EnqueueSpawnerRotationSpeedEventOverTime(260f, 275f, 130, 50f, 200f);
+        EnqueueSpawnerRotationSpeedEventOverTime(276f, 277f, 10, 200f, -100f);
+        EnqueueSpawnerRotationSpeedEvent(277.1f, -80f);
+        EnqueueSpawnerRotationSpeedEvent(335f, 0f);
+        EnqueueSpawnerRotationSpeedEvent(340f, -100f);
+        //Spawner movement
+        /*
         EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 100, 10f, 30f);
 
         EnqueueSpawnerRotationSpeedEvent(49f, -60f);
@@ -263,13 +305,14 @@ public class GameManager : MonoBehaviour
 
         //Bullet spawning
         bulletSpeed = 3f;
-        for (float i = 49f; i < 66f; i += 0.5f)
+        for (float i = 49f; i < 180f; i += 0.5f)
         {
             for (int j = 0; j < numberOfSpawners; j++)
             {
-                EnqueueBulletSpawnEvent(i, j, 20f - (i - 49f));
+                EnqueueBulletSpawnEvent(i, j, 35f);
             }
         }
+        */
     }
 
 

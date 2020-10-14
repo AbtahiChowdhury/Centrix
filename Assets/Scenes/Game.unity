@@ -456,11 +456,11 @@ MonoBehaviour:
     type: 3}
   bulletPrefab: {fileID: 505250954407813139, guid: df28725a25113274a8ec2bfc3d28c105,
     type: 3}
-  levelIndex: 0
+  levelIndex: 3
   songPosInBeats: 0
   numberOfSamples: 256
-  debugMode: 0
-  startTimeInSeconds: 15
+  debugMode: 1
+  startTimeInSeconds: 140
 --- !u!4 &1706324499
 Transform:
   m_ObjectHideFlags: 0
@@ -592,7 +592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bias: 30
-  timeStep: 0.3
+  timeStep: 0.15
 --- !u!114 &1706324503
 MonoBehaviour:
   m_ObjectHideFlags: 0

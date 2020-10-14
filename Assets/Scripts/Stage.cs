@@ -33,9 +33,9 @@ public class Stage : MonoBehaviour
         spawners[index].transform.Find("Triangle").GetComponent<SpriteRenderer>().color = color;
 
         //Trying to spawn multiple bullets for the selected spawner circle
-        for(int i= -20; i<20; i+=10)
+        for (int i = 0; i < GameManager.Instance.difficulty+1; i++)
         {
-            spawners[index].GetComponent<Spawner>().SpawnBullet(i);
+            spawners[index].GetComponent<Spawner>().SpawnBullet(random.Next(-45, 45));
         }
 
         yield return new WaitForSeconds(0.5f);
