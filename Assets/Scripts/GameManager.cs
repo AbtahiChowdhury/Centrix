@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public GameObject bulletPrefab;
 
     public float speed { get; set; }
-    public int difficulty { get; set; }
+    public int bulletsHit { get; set; }
 
     float BPM;
     float secPerBeat;
@@ -53,6 +53,19 @@ public class GameManager : MonoBehaviour
     int spawnerRotationSpeedEventsIndex;
 
     public float bulletSpeed { get; set; }
+    struct BulletSpeedEventParameters
+    {
+        public float beat { get; set; }
+        public float speed { get; set; }
+
+        public BulletSpeedEventParameters(float beat, float speed)
+        {
+            this.beat = beat;
+            this.speed = speed;
+        }
+    }
+    ArrayList bulletSpeedEvents;
+    int bulletSpeedEventsIndex;
 
     struct BulletSpawnEventParameters
     {
@@ -70,6 +83,7 @@ public class GameManager : MonoBehaviour
     ArrayList bulletSpawnEvents;
     int bulletSpawnEventsIndex;
 
+    public int difficulty;
     public int levelIndex;
     public float songPosInBeats;
 
@@ -122,6 +136,20 @@ public class GameManager : MonoBehaviour
             dsptimesong = (float)AudioSettings.dspTime;
             audioSource.time = startTimeInSeconds;
             songPosInBeats = startTimeInSeconds / secPerBeat;
+            while (bulletSpeedEventsIndex < bulletSpeedEvents.Count && songPosInBeats > ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).beat)
+            {
+                bulletSpeed = ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).speed;
+                bulletSpeedEventsIndex++;
+            }
+            while (spawnerRotationSpeedEventsIndex < spawnerRotationSpeedEvents.Count && songPosInBeats > ((SpawnerRotationSpeedEventParameters)spawnerRotationSpeedEvents[spawnerRotationSpeedEventsIndex]).beat)
+            {
+                spawnerRotationSpeed = ((SpawnerRotationSpeedEventParameters)spawnerRotationSpeedEvents[spawnerRotationSpeedEventsIndex]).speed;
+                spawnerRotationSpeedEventsIndex++;
+            }
+            while (bulletSpawnEventsIndex < bulletSpawnEvents.Count && songPosInBeats > ((BulletSpawnEventParameters)bulletSpawnEvents[bulletSpawnEventsIndex]).beat)
+            {
+                bulletSpawnEventsIndex++;
+            }
             audioSource.Play();
         }
         else
@@ -145,7 +173,7 @@ public class GameManager : MonoBehaviour
             songPosition = (float)(AudioSettings.dspTime - dsptimesong);
             songPosInBeats = songPosition / secPerBeat;
         }
-        Debug.Log(songPosInBeats);
+        Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -159,6 +187,7 @@ public class GameManager : MonoBehaviour
 
         CheckForSpawnerSpeedChangeEvent();
         CheckForBulletSpawnEvent();
+        CheckForBulletSpeedChangeEvent();
     }
 
     //Game Over Menu
@@ -194,6 +223,9 @@ public class GameManager : MonoBehaviour
         bulletSpawnEventsIndex = 0;
         bulletSpawnEvents = new ArrayList();
 
+        bulletSpeedEventsIndex = 0;
+        bulletSpeedEvents = new ArrayList();
+
         audioSource.clip = audioClip[levelIndex];
         switch (levelIndex)
         {
@@ -223,6 +255,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void CheckForBulletSpeedChangeEvent()
+    {
+        if (bulletSpeedEventsIndex < bulletSpeedEvents.Count && songPosInBeats > ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).beat)
+        {
+            bulletSpeed = ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).speed;
+            bulletSpeedEventsIndex++;
+        }
+    }
+
     void CheckForSpawnerSpeedChangeEvent()
     {
         if (spawnerRotationSpeedEventsIndex < spawnerRotationSpeedEvents.Count && songPosInBeats > ((SpawnerRotationSpeedEventParameters)spawnerRotationSpeedEvents[spawnerRotationSpeedEventsIndex]).beat)
@@ -244,42 +285,31 @@ public class GameManager : MonoBehaviour
     void Level1()
     {
         //Initial level setup
-        audioSource.clip = audioClip[levelIndex];
         BPM = 170f;
-        difficulty = 1;
-        bulletSpeed = 3f;
+        bulletSpeed = 1f;
         spawnerRotationSpeed = 10f;
-
         numberOfSpawners = 6;
         spawnerArray = new GameObject[numberOfSpawners];
         CreateSpawners();
 
         //Spawner movement
-        EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 100, 10f, 30f);
-
+        EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 100, 10f, 60f);
         EnqueueSpawnerRotationSpeedEvent(49f, -60f);
-        EnqueueSpawnerRotationSpeedEvent(58f, 60f);
-        EnqueueSpawnerRotationSpeedEvent(60f, -60f);
-        EnqueueSpawnerRotationSpeedEvent(62f, 60f);
-        EnqueueSpawnerRotationSpeedEvent(64f, -60f);
-        EnqueueSpawnerRotationSpeedEvent(67f, 60f);
+        EnqueueSpawnerRotationSpeedEvent(113f, 60f);
 
         //Bullet spawning
-        for (float i = 49f; i < 180f; i += 0.5f)
-        {
-            for (int j = 0; j < numberOfSpawners; j++)
-            {
-                EnqueueBulletSpawnEvent(i, j, 35f);
-            }
-        }
+        EnqueueSurroundPlayer(2f, 46f, 0.5f, 4f, 1);
+        EnqueueSurroundPlayer(49f, 112f, 0.5f, 2.25f, -1);
+        EnqueueSurroundPlayer(113f, 180f, 0.5f, 2.25f, 1);
+
+        //Bullet speed
+        EnqueueBulletSpeedEvent(49f, 4f);
     }
 
     void Level4()
     {
         //Initial level setup
-        audioSource.clip = audioClip[levelIndex];
         BPM = 135f;
-        difficulty = 1;
         bulletSpeed = 3f;
         spawnerRotationSpeed = 100f;
 
@@ -292,30 +322,14 @@ public class GameManager : MonoBehaviour
         EnqueueSpawnerRotationSpeedEvent(277.1f, -80f);
         EnqueueSpawnerRotationSpeedEvent(335f, 0f);
         EnqueueSpawnerRotationSpeedEvent(340f, -100f);
-        //Spawner movement
-        /*
-        EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 100, 10f, 30f);
-
-        EnqueueSpawnerRotationSpeedEvent(49f, -60f);
-        EnqueueSpawnerRotationSpeedEvent(58f, 60f);
-        EnqueueSpawnerRotationSpeedEvent(60f, -60f);
-        EnqueueSpawnerRotationSpeedEvent(62f, 60f);
-        EnqueueSpawnerRotationSpeedEvent(64f, -60f);
-        EnqueueSpawnerRotationSpeedEvent(67f, 60f);
-
-        //Bullet spawning
-        bulletSpeed = 3f;
-        for (float i = 49f; i < 180f; i += 0.5f)
-        {
-            for (int j = 0; j < numberOfSpawners; j++)
-            {
-                EnqueueBulletSpawnEvent(i, j, 35f);
-            }
-        }
-        */
     }
 
 
+
+    void EnqueueBulletSpeedEvent(float beat, float speed)
+    {
+        bulletSpeedEvents.Add(new BulletSpeedEventParameters(beat, speed));
+    }
 
     void EnqueueBulletSpawnEvent(float beat, int spawner, float offset)
     {
@@ -336,5 +350,18 @@ public class GameManager : MonoBehaviour
             counter++;
         }
         counter = 0;
+    }
+
+    void EnqueueSurroundPlayer(float startBeat, float endBeat, float rateOfFire, float distanceFromCenter, int sign)
+    {
+        float thetaDistanceFromCenter = Mathf.Rad2Deg * sign * (Mathf.Atan(distanceFromCenter / 4.85f));
+
+        for (float i = startBeat; i < endBeat; i += rateOfFire)
+        {
+            for (int j = 0; j < numberOfSpawners; j++)
+            {
+                EnqueueBulletSpawnEvent(i, j, thetaDistanceFromCenter);
+            }
+        }
     }
 }

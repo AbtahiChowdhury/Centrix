@@ -23,4 +23,14 @@ public class BulletScroller : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            //Debug.Log("hit player");
+            transform.Find("Circle2").GetComponent<SpriteRenderer>().color = Color.red;
+            GameManager.Instance.bulletsHit++;
+        }
+    }
 }
