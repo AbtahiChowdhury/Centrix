@@ -461,7 +461,7 @@ MonoBehaviour:
   songPosInBeats: 0
   numberOfSamples: 256
   debugMode: 0
-  startTimeInSeconds: 15
+  startTimeInSeconds: 80
 --- !u!4 &1706324499
 Transform:
   m_ObjectHideFlags: 0

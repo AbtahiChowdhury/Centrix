@@ -296,14 +296,24 @@ public class GameManager : MonoBehaviour
         EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 100, 10f, 60f);
         EnqueueSpawnerRotationSpeedEvent(49f, -60f);
         EnqueueSpawnerRotationSpeedEvent(113f, 60f);
+        EnqueueSpawnerRotationSpeedEventOverTime(176f, 240f, 320, 60f, 5f);
+        EnqueueSpawnerRotationSpeedEvent(240.5f, -30f);
+        EnqueueSpawnerRotationSpeedEvent(257f, 30f);
 
         //Bullet spawning
         EnqueueSurroundPlayer(2f, 46f, 0.5f, 4f, 1);
         EnqueueSurroundPlayer(49f, 112f, 0.5f, 2.25f, -1);
         EnqueueSurroundPlayer(113f, 180f, 0.5f, 2.25f, 1);
+        EnqueueSurroundPlayer(176f, 240f, 0.25f, 40f, 7.5f);
+        EnqueueSurroundPlayer(240f, 257f, 0.25f, 1.5f, 1);
+        EnqueueSurroundPlayer(257f, 270f, 0.25f, 1.5f, -1);
 
         //Bullet speed
         EnqueueBulletSpeedEvent(49f, 4f);
+        EnqueueBulletSpeedEventOverTime(176f, 240f, 320, 4f, 1.5f);
+        EnqueueBulletSpeedEvent(240.5f, 2.5f);
+        EnqueueBulletSpeedEvent(257f, 3f);
+        EnqueueBulletSpeedEventOverTime(270f, 287f, 85, 3f, 5f);
     }
 
     void Level4()
@@ -326,9 +336,24 @@ public class GameManager : MonoBehaviour
 
 
 
+
+
     void EnqueueBulletSpeedEvent(float beat, float speed)
     {
         bulletSpeedEvents.Add(new BulletSpeedEventParameters(beat, speed));
+    }
+
+    void EnqueueBulletSpeedEventOverTime(float startBeat, float endBeat, int numberOfSteps, float startSpeed, float endSpeed)
+    {
+        float beatStepSize = (endBeat - startBeat) / numberOfSteps;
+        float speedStepSize = (endSpeed - startSpeed) / numberOfSteps;
+        float currentSpeed = startSpeed;
+
+        for (float i = startBeat; i < endBeat; i += beatStepSize)
+        {
+            EnqueueBulletSpeedEvent(i, currentSpeed);
+            currentSpeed += speedStepSize;
+        }
     }
 
     void EnqueueBulletSpawnEvent(float beat, int spawner, float offset)
@@ -343,13 +368,15 @@ public class GameManager : MonoBehaviour
 
     void EnqueueSpawnerRotationSpeedEventOverTime(float startBeat, float endBeat, int numberOfSteps, float startSpeed, float endSpeed)
     {
-        int counter = 0;
-        for (float i = startBeat; i < endBeat; i += (endBeat - startBeat) / numberOfSteps)
+        float beatStepSize = (endBeat - startBeat) / numberOfSteps;
+        float speedStepSize = (endSpeed - startSpeed) / numberOfSteps;
+        float currentSpeed = startSpeed;
+
+        for (float i = startBeat; i < endBeat; i += beatStepSize)
         {
-            EnqueueSpawnerRotationSpeedEvent(i, startSpeed + (counter * (endBeat / numberOfSteps)));
-            counter++;
+            EnqueueSpawnerRotationSpeedEvent(i, currentSpeed);
+            currentSpeed += speedStepSize;
         }
-        counter = 0;
     }
 
     void EnqueueSurroundPlayer(float startBeat, float endBeat, float rateOfFire, float distanceFromCenter, int sign)
@@ -362,6 +389,32 @@ public class GameManager : MonoBehaviour
             {
                 EnqueueBulletSpawnEvent(i, j, thetaDistanceFromCenter);
             }
+        }
+    }
+
+    void EnqueueSurroundPlayer(float startBeat, float endBeat, float rateOfFire, float angleOffCenter)
+    {
+        for (float i = startBeat; i < endBeat; i += rateOfFire)
+        {
+            for (int j = 0; j < numberOfSpawners; j++)
+            {
+                EnqueueBulletSpawnEvent(i, j, angleOffCenter);
+            }
+        }
+    }
+
+    void EnqueueSurroundPlayer(float startBeat, float endBeat, float rateOfFire, float startAngleOffCenter, float endAngleOffCenter)
+    {
+        float angleStepSize = (endAngleOffCenter - startAngleOffCenter) / ((endBeat - startBeat) / rateOfFire);
+        float currentAngle = startAngleOffCenter;
+
+        for (float i = startBeat; i < endBeat; i += rateOfFire)
+        {
+            for (int j = 0; j < numberOfSpawners; j++)
+            {
+                EnqueueBulletSpawnEvent(i, j, currentAngle);
+            }
+            currentAngle += angleStepSize;
         }
     }
 }
