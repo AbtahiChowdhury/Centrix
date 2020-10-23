@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour
             songPosition = (float)(AudioSettings.dspTime - dsptimesong);
             songPosInBeats = songPosition / secPerBeat;
         }
-        Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
+       // Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;

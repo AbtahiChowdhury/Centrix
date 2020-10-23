@@ -29,6 +29,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (playerInput.pausing)
+        {
+            Debug.Log("Pausing");
+        }
         Move();
 
         float theta = Mathf.Atan2(transform.position.y, transform.position.x);

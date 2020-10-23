@@ -9,6 +9,7 @@ public class PlayerInput : MonoBehaviour
     private PlayerControls controls;
     private bool isGamepad = false;
     public Vector2 move;
+    public bool pausing;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class PlayerInput : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y");
         float horizontal = Input.GetAxis("Vertical");
         float vertical = Input.GetAxis("Horizontal");
+        bool pause = Input.GetKeyDown(KeyCode.P);
         if (!isGamepad && vertical == 0 && horizontal == 0)
         {
             move = new Vector2(mouseX, mouseY);
@@ -37,6 +39,8 @@ public class PlayerInput : MonoBehaviour
         {
             move = new Vector2(vertical, horizontal);
         }
+        pausing = pause;
+
     }
 
     void JoyStickMove(InputAction.CallbackContext ctx)
