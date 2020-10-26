@@ -34,6 +34,15 @@ public class GameManager : MonoBehaviour
     int numberOfSpawners;
     static GameObject[] spawnerArray;
 
+    private void EnablePausing()
+    {
+        if (playerInput.pausing)
+        {
+            AudioListener.pause = !AudioListener.pause;
+            Time.timeScale = (Time.timeScale == 0) ? 1 : 0;
+        }
+    }
+
     public static GameObject[] getSpawners ()
     {
         return spawnerArray;
@@ -94,25 +103,11 @@ public class GameManager : MonoBehaviour
     public bool debugMode;
     public float startTimeInSeconds;
 
-    private void EnablePausing ()
-    {
-        if (playerInput.pausing)
-        {
-            AudioListener.pause = !AudioListener.pause;
-            if (Time.timeScale == 0)
-            {
-                Time.timeScale = 1;
-            }
-            else
-            {
-                Time.timeScale = 0;
-            }
-
-        }
-    }
 
     private void Awake()
     {
+
+        playerInput = Player.instance.GetComponent<PlayerInput>();
         xSensitivity = ySensitivity = 100.0f;
         if (instance != null && instance !=this)
         {
@@ -182,7 +177,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(debugMode)
+        EnablePausing();
+        if (debugMode)
         {
             songPosition = (float)((AudioSettings.dspTime - dsptimesong) + startTimeInSeconds);
             songPosInBeats = songPosition / secPerBeat;
