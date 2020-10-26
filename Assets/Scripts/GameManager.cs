@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
+    private PlayerInput playerInput;
     public bool isGameOver;
     public float xSensitivity { get; private set; }
     public float ySensitivity { get; private set; }
@@ -93,6 +94,23 @@ public class GameManager : MonoBehaviour
     public bool debugMode;
     public float startTimeInSeconds;
 
+    private void EnablePausing ()
+    {
+        if (playerInput.pausing)
+        {
+            AudioListener.pause = !AudioListener.pause;
+            if (Time.timeScale == 0)
+            {
+                Time.timeScale = 1;
+            }
+            else
+            {
+                Time.timeScale = 0;
+            }
+
+        }
+    }
+
     private void Awake()
     {
         xSensitivity = ySensitivity = 100.0f;
@@ -105,6 +123,7 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
     }
+
 
     // Start is called before the first frame update
     void Start()
