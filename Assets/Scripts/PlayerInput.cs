@@ -7,7 +7,8 @@ using UnityEngine.InputSystem;
 public class PlayerInput : MonoBehaviour
 {//Get all user inputs
     private PlayerControls controls;
-    private bool isGamepad = false;
+    public bool isGamepad = false;
+    private bool ps4_x = false;
     public Vector2 move;
     public bool pausing;
 
@@ -20,6 +21,8 @@ public class PlayerInput : MonoBehaviour
 
         controls.Gameplay.Move.performed += ctx => JoyStickMove(ctx);
         controls.Gameplay.Move.canceled += ctx => JoyStickStop();
+        controls.Gameplay.PS4_X.performed += ctx => PS4_X_Press(ctx);
+        controls.Gameplay.PS4_X.canceled += ctx => PS4_X_UnPress();
 
 
     }
@@ -34,12 +37,15 @@ public class PlayerInput : MonoBehaviour
         if (!isGamepad && vertical == 0 && horizontal == 0)
         {
             move = new Vector2(mouseX, mouseY);
+            pause = Input.GetKeyDown(KeyCode.P);
+
         }
         else if (!isGamepad && mouseX == 0 && mouseY == 0)
         {
             move = new Vector2(vertical, horizontal);
+
         }
-        pausing = pause;
+        pausing = pause || ps4_x;
 
     }
 
@@ -53,6 +59,19 @@ public class PlayerInput : MonoBehaviour
     {
         isGamepad = false;
         move = Vector2.zero;
+    }
+
+    void PS4_X_Press(InputAction.CallbackContext ctx)
+    {
+        isGamepad = true;
+        ps4_x = ctx.ReadValueAsButton();
+    }
+
+
+    void PS4_X_UnPress()
+    {
+        isGamepad = false;
+        ps4_x = false;
     }
 
     void OnEnable()
