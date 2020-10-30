@@ -226,7 +226,8 @@ public class GameManager : MonoBehaviour
             songPosition = (float)(AudioSettings.dspTime - dsptimesong);
             songPosInBeats = songPosition / secPerBeat;
         }
-       // Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
+
+        Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -361,12 +362,20 @@ public class GameManager : MonoBehaviour
         CreateSpawners();
 
         //Spawner movement
-        EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 100, 10f, 60f);
+        EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 10f, 60f);
         EnqueueSpawnerRotationSpeedEvent(49f, -60f);
         EnqueueSpawnerRotationSpeedEvent(113f, 60f);
-        EnqueueSpawnerRotationSpeedEventOverTime(176f, 240f, 320, 60f, 5f);
+        EnqueueSpawnerRotationSpeedEventOverTime(176f, 240f, 60f, 5f);
         EnqueueSpawnerRotationSpeedEvent(240.5f, -30f);
         EnqueueSpawnerRotationSpeedEvent(257f, 30f);
+        EnqueueSpawnerRotationSpeedEventOverTime(273f, 287f, 30f, 40f);
+        EnqueueSpawnerRotationSpeedEventOverTime(287f, 298f, 40f, 70f);
+        EnqueueSpawnerRotationSpeedEventOverTime(298f, 304f, -10f, -20f);
+        EnqueueSpawnerRotationSpeedEvent(307f, -70f);
+        EnqueueSpawnerRotationSpeedEvent(369f, -10f);
+        EnqueueSpawnerRotationSpeedEvent(371f, 70f);
+        EnqueueSpawnerRotationSpeedEventOverTime(425f, 432f, 20f, 100f);
+        EnqueueSpawnerRotationSpeedEventOverTime(434f, 490f, 50f, 0f);
 
         //Bullet spawning
         EnqueueSurroundPlayer(2f, 46f, 0.5f, 4f, 1);
@@ -375,17 +384,33 @@ public class GameManager : MonoBehaviour
         EnqueueSurroundPlayer(176f, 240f, 0.25f, 40f, 7.5f);
         EnqueueSurroundPlayer(240f, 257f, 0.25f, 1.5f, 1);
         EnqueueSurroundPlayer(257f, 270f, 0.25f, 1.5f, -1);
+        EnqueueSurroundPlayer(270f, 298f, 0.25f, 35f, 45f);
+        EnqueueSurroundPlayer(304f, 369f, 0.15f, 4f, -1);
+        EnqueueSurroundPlayer(371f, 425f, 0.15f, 4f, 1);
 
         //Bullet speed
         EnqueueBulletSpeedEvent(49f, 4f);
         EnqueueBulletSpeedEventOverTime(176f, 240f, 320, 4f, 1.5f);
         EnqueueBulletSpeedEvent(240.5f, 2.5f);
         EnqueueBulletSpeedEvent(257f, 3f);
-        EnqueueBulletSpeedEventOverTime(270f, 287f, 85, 3f, 5f);
+        EnqueueBulletSpeedEventOverTime(273f, 287f, 85, 3f, 4f);
+        EnqueueBulletSpeedEventOverTime(287f, 298f, 80, 4f, 6f);
+        EnqueueBulletSpeedEventOverTime(298f, 304f, 60, 1.5f, 2f);
+        EnqueueBulletSpeedEvent(307f, 4.5f);
+        EnqueueBulletSpeedEvent(369f, 1f);
+        EnqueueBulletSpeedEvent(371f, 4.5f);
+        EnqueueBulletSpeedEventOverTime(425f, 432f, 50, 3f, 7f);
+        EnqueueBulletSpeedEvent(371f, 2f);
 
-        //Audio Syncer Bias
+        //Audio Syncer Bias (init 30f)
+        EnqueueChangeAudioSyncerBias(193f, 15f);
+        EnqueueChangeAudioSyncerBias(240f, 30f);
+        EnqueueChangeAudioSyncerBias(245f, 10f);
+        EnqueueChangeAudioSyncerBias(432f, 30f);
 
-        //Audio Syncer Timestep
+        //Audio Syncer Timestep (init 0.15f)
+        EnqueueChangeAudioSyncerTimeStep(288f, 0.1f);
+        EnqueueChangeAudioSyncerTimeStep(432f, 0.15f);
     }
 
     void Level4()
@@ -399,8 +424,8 @@ public class GameManager : MonoBehaviour
         spawnerArray = new GameObject[numberOfSpawners];
         CreateSpawners();
 
-        EnqueueSpawnerRotationSpeedEventOverTime(260f, 275f, 130, 50f, 200f);
-        EnqueueSpawnerRotationSpeedEventOverTime(276f, 277f, 10, 200f, -100f);
+        EnqueueSpawnerRotationSpeedEventOverTime(260f, 275f, 50f, 200f);
+        EnqueueSpawnerRotationSpeedEventOverTime(276f, 277f, 200f, -100f);
         EnqueueSpawnerRotationSpeedEvent(277.1f, -80f);
         EnqueueSpawnerRotationSpeedEvent(335f, 0f);
         EnqueueSpawnerRotationSpeedEvent(340f, -100f);
@@ -438,8 +463,9 @@ public class GameManager : MonoBehaviour
         spawnerRotationSpeedEvents.Add(new SpawnerRotationSpeedEventParameters(beat, speed));
     }
 
-    void EnqueueSpawnerRotationSpeedEventOverTime(float startBeat, float endBeat, int numberOfSteps, float startSpeed, float endSpeed)
+    void EnqueueSpawnerRotationSpeedEventOverTime(float startBeat, float endBeat, float startSpeed, float endSpeed)
     {
+        int numberOfSteps = ((int)(endBeat - startBeat)) * 5;
         float beatStepSize = (endBeat - startBeat) / numberOfSteps;
         float speedStepSize = (endSpeed - startSpeed) / numberOfSteps;
         float currentSpeed = startSpeed;
