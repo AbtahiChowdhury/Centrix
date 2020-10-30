@@ -33,11 +33,11 @@ public class PlayerInput : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y");
         float horizontal = Input.GetAxis("Vertical");
         float vertical = Input.GetAxis("Horizontal");
-        bool pause = Input.GetKeyDown(KeyCode.P);
+        bool pause = Input.GetKeyDown(KeyCode.Escape);
         if (!isGamepad && vertical == 0 && horizontal == 0)
         {
             move = new Vector2(mouseX, mouseY);
-            pause = Input.GetKeyDown(KeyCode.P);
+            pause = Input.GetKeyDown(KeyCode.Escape);
 
         }
         else if (!isGamepad && mouseX == 0 && mouseY == 0)

@@ -40,6 +40,16 @@ public class GameManager : MonoBehaviour
         {
             AudioListener.pause = !AudioListener.pause;
             Time.timeScale = (Time.timeScale == 0) ? 1 : 0;
+            Cursor.visible = !Cursor.visible;
+            if (Cursor.visible)
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            Player.instance.GetComponent<PlayerMovement>().paused = !Player.instance.GetComponent<PlayerMovement>().paused;
         }
     }
 
@@ -92,6 +102,34 @@ public class GameManager : MonoBehaviour
     }
     ArrayList bulletSpawnEvents;
     int bulletSpawnEventsIndex;
+
+    struct AudioSyncerBiasChangeEventParameters
+    {
+        public float beat { get; set; }
+        public float bias { get; set; }
+
+        public AudioSyncerBiasChangeEventParameters(float beat, float bias)
+        {
+            this.beat = beat;
+            this.bias = bias;
+        }
+    }
+    ArrayList audioSyncerBiasChangeEvents;
+    int audioSyncerBiasChangeEventsIndex;
+
+    struct AudioSyncerTimeStepChangeEventParameters
+    {
+        public float beat { get; set; }
+        public float timestep { get; set; }
+
+        public AudioSyncerTimeStepChangeEventParameters(float beat, float timestep)
+        {
+            this.beat = beat;
+            this.timestep = timestep;
+        }
+    }
+    ArrayList audioSyncerTimeStepChangeEvents;
+    int audioSyncerTimeStepChangeEventsIndex;
 
     public int difficulty;
     public int levelIndex;
@@ -200,9 +238,7 @@ public class GameManager : MonoBehaviour
         speed = Mathf.Lerp(1f, 3f, avg * 50f);
 
 
-        CheckForSpawnerSpeedChangeEvent();
-        CheckForBulletSpawnEvent();
-        CheckForBulletSpeedChangeEvent();
+        CheckForEvents();
     }
 
     //Game Over Menu
@@ -241,6 +277,12 @@ public class GameManager : MonoBehaviour
         bulletSpeedEventsIndex = 0;
         bulletSpeedEvents = new ArrayList();
 
+        audioSyncerBiasChangeEventsIndex = 0;
+        audioSyncerBiasChangeEvents = new ArrayList();
+
+        audioSyncerTimeStepChangeEventsIndex = 0;
+        audioSyncerTimeStepChangeEvents = new ArrayList();
+
         audioSource.clip = audioClip[levelIndex];
         switch (levelIndex)
         {
@@ -270,30 +312,41 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void CheckForBulletSpeedChangeEvent()
+    void CheckForEvents()
     {
+        //bullet speed events
         if (bulletSpeedEventsIndex < bulletSpeedEvents.Count && songPosInBeats > ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).beat)
         {
             bulletSpeed = ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).speed;
             bulletSpeedEventsIndex++;
         }
-    }
 
-    void CheckForSpawnerSpeedChangeEvent()
-    {
+        //spawner rotation speed events
         if (spawnerRotationSpeedEventsIndex < spawnerRotationSpeedEvents.Count && songPosInBeats > ((SpawnerRotationSpeedEventParameters)spawnerRotationSpeedEvents[spawnerRotationSpeedEventsIndex]).beat)
         {
             spawnerRotationSpeed = ((SpawnerRotationSpeedEventParameters)spawnerRotationSpeedEvents[spawnerRotationSpeedEventsIndex]).speed;
             spawnerRotationSpeedEventsIndex++;
         }
-    }
 
-    void CheckForBulletSpawnEvent()
-    {
+        //bullet spawn events
         while (bulletSpawnEventsIndex < bulletSpawnEvents.Count && songPosInBeats > ((BulletSpawnEventParameters)bulletSpawnEvents[bulletSpawnEventsIndex]).beat)
         {
             spawnerArray[((BulletSpawnEventParameters)bulletSpawnEvents[bulletSpawnEventsIndex]).spawner].GetComponent<Spawner>().SpawnBullet(((BulletSpawnEventParameters)bulletSpawnEvents[bulletSpawnEventsIndex]).theta);
             bulletSpawnEventsIndex++;
+        }
+
+        //audio syncer bias events
+        if (audioSyncerBiasChangeEventsIndex < audioSyncerBiasChangeEvents.Count && songPosInBeats > ((AudioSyncerBiasChangeEventParameters)audioSyncerBiasChangeEvents[audioSyncerBiasChangeEventsIndex]).beat)
+        {
+            GetComponent<AudioSyncer>().bias = ((AudioSyncerBiasChangeEventParameters)audioSyncerBiasChangeEvents[audioSyncerBiasChangeEventsIndex]).bias;
+            audioSyncerBiasChangeEventsIndex++;
+        }
+
+        //audio syncer timestep events
+        if (audioSyncerTimeStepChangeEventsIndex < audioSyncerTimeStepChangeEvents.Count && songPosInBeats > ((AudioSyncerTimeStepChangeEventParameters)audioSyncerTimeStepChangeEvents[audioSyncerTimeStepChangeEventsIndex]).beat)
+        {
+            GetComponent<AudioSyncer>().timeStep = ((AudioSyncerTimeStepChangeEventParameters)audioSyncerTimeStepChangeEvents[audioSyncerTimeStepChangeEventsIndex]).timestep;
+            audioSyncerBiasChangeEventsIndex++;
         }
     }
 
@@ -329,6 +382,10 @@ public class GameManager : MonoBehaviour
         EnqueueBulletSpeedEvent(240.5f, 2.5f);
         EnqueueBulletSpeedEvent(257f, 3f);
         EnqueueBulletSpeedEventOverTime(270f, 287f, 85, 3f, 5f);
+
+        //Audio Syncer Bias
+
+        //Audio Syncer Timestep
     }
 
     void Level4()
@@ -431,5 +488,15 @@ public class GameManager : MonoBehaviour
             }
             currentAngle += angleStepSize;
         }
+    }
+
+    void EnqueueChangeAudioSyncerBias(float beat, float bias)
+    {
+        audioSyncerBiasChangeEvents.Add(new AudioSyncerBiasChangeEventParameters(beat, bias));
+    }
+
+    void EnqueueChangeAudioSyncerTimeStep(float beat, float timeStep)
+    {
+        audioSyncerTimeStepChangeEvents.Add(new AudioSyncerTimeStepChangeEventParameters(beat, timeStep));
     }
 }
