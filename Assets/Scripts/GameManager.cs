@@ -202,6 +202,16 @@ public class GameManager : MonoBehaviour
             {
                 bulletSpawnEventsIndex++;
             }
+            while (audioSyncerBiasChangeEventsIndex < audioSyncerBiasChangeEvents.Count && songPosInBeats > ((AudioSyncerBiasChangeEventParameters)audioSyncerBiasChangeEvents[audioSyncerBiasChangeEventsIndex]).beat)
+            {
+                GetComponent<AudioSyncer>().bias = ((AudioSyncerBiasChangeEventParameters)audioSyncerBiasChangeEvents[audioSyncerBiasChangeEventsIndex]).bias;
+                audioSyncerBiasChangeEventsIndex++;
+            }
+            while (audioSyncerTimeStepChangeEventsIndex < audioSyncerTimeStepChangeEvents.Count && songPosInBeats > ((AudioSyncerTimeStepChangeEventParameters)audioSyncerTimeStepChangeEvents[audioSyncerTimeStepChangeEventsIndex]).beat)
+            {
+                GetComponent<AudioSyncer>().timeStep = ((AudioSyncerTimeStepChangeEventParameters)audioSyncerTimeStepChangeEvents[audioSyncerTimeStepChangeEventsIndex]).timestep;
+                audioSyncerBiasChangeEventsIndex++;
+            }
             audioSource.Play();
         }
         else
@@ -294,6 +304,7 @@ public class GameManager : MonoBehaviour
             case 1:
                 break;
             case 2:
+                Level3();
                 break;
             case 3:
                 Level4();
@@ -360,6 +371,8 @@ public class GameManager : MonoBehaviour
         numberOfSpawners = 6;
         spawnerArray = new GameObject[numberOfSpawners];
         CreateSpawners();
+        GetComponent<AudioSyncer>().bias = 30f;
+        GetComponent<AudioSyncer>().timeStep = 0.15f;
 
         //Spawner movement
         EnqueueSpawnerRotationSpeedEventOverTime(30f, 49f, 10f, 60f);
@@ -411,6 +424,58 @@ public class GameManager : MonoBehaviour
         //Audio Syncer Timestep (init 0.15f)
         EnqueueChangeAudioSyncerTimeStep(288f, 0.1f);
         EnqueueChangeAudioSyncerTimeStep(432f, 0.15f);
+    }
+
+    void Level3()
+    {
+        //Initial level setup
+        BPM = 140f;
+        bulletSpeed = 1f;
+        spawnerRotationSpeed = 15f;
+        numberOfSpawners = 5;
+        spawnerArray = new GameObject[numberOfSpawners];
+        CreateSpawners();
+        GetComponent<AudioSyncer>().bias = 100f;
+        GetComponent<AudioSyncer>().timeStep = 0.1f;
+
+        //Spawner movement
+        EnqueueSpawnerRotationSpeedEvent(36f, -30f);
+        EnqueueSpawnerRotationSpeedEvent(68f, 30f);
+        EnqueueSpawnerRotationSpeedEvent(100f, 10f);
+        EnqueueSpawnerRotationSpeedEvent(100f, 15f);
+        EnqueueSpawnerRotationSpeedEvent(164f, -30f);
+        EnqueueSpawnerRotationSpeedEvent(195f, -40f);
+        EnqueueSpawnerRotationSpeedEventOverTime(195f, 212f, -40f, -70f);
+        EnqueueSpawnerRotationSpeedEventOverTime(212f, 220f, -70f, -120f);
+        EnqueueSpawnerRotationSpeedEventOverTime(220f, 225f, -120f, -220f);
+        EnqueueSpawnerRotationSpeedEventOverTime(225f, 228f, -220f, -500f);
+        EnqueueSpawnerRotationSpeedEvent(228.5f, 150f);
+
+        //Bullet spawning
+        EnqueueSurroundPlayer(1f, 36f, 0.25f, 35f, 10f);
+        EnqueueOscillateSurroundPlayer(36f, 68f, 0.1f, -45f, -30f, 2f);
+        EnqueueOscillateSurroundPlayer(68f, 100f, 0.1f, 45f, 20f, 1f);
+        EnqueueOscillateSurroundPlayer(100f, 132f, 0.2f, 45f, 10f, 0.125f);
+        EnqueueOscillateSurroundPlayer(132f, 164f, 0.2f, 45f, 20f, 0.15f);
+        EnqueueOscillateSurroundPlayer(164f, 195f, 0.2f, -45f, -30f, 0.2f);
+        EnqueueOscillateSurroundPlayer(195f, 220f, 0.1f, -45f, -30f, 0.2f);
+        EnqueueOscillateSurroundPlayer(220f, 228f, 0.05f, -45f, -25f, 0.01f);
+
+        //Bullet speed
+        EnqueueBulletSpeedEvent(36f, 3f);
+        EnqueueBulletSpeedEvent(100f, 1.5f);
+        EnqueueBulletSpeedEvent(132f, 2.5f);
+        EnqueueBulletSpeedEventOverTime(195f, 220f, 200, 2.5f, 4.5f);
+        EnqueueBulletSpeedEventOverTime(220f, 228f, 200, 4.5f, 7f);
+        EnqueueBulletSpeedEvent(228.5f, 4f);
+
+        //Audio Syncer Bias (init 15f)
+        EnqueueChangeAudioSyncerBias(36f, 15f);
+        EnqueueChangeAudioSyncerBias(100f, 30f);
+
+        //Audio Syncer Timestep (init 0.15f)
+        EnqueueChangeAudioSyncerBias(100f, 0.1f);
+        EnqueueChangeAudioSyncerBias(132f, 1f);
     }
 
     void Level4()
@@ -474,6 +539,23 @@ public class GameManager : MonoBehaviour
         {
             EnqueueSpawnerRotationSpeedEvent(i, currentSpeed);
             currentSpeed += speedStepSize;
+        }
+    }
+
+    //redo with sin curve
+    void EnqueueOscillateSurroundPlayer(float startBeat, float endBeat, float rateOfFire, float startAngleOffCenter, float endAngleOffCenter, float reps)
+    {
+        float a = Mathf.Abs(endAngleOffCenter - startAngleOffCenter) / 2;
+        float b = Mathf.PI * reps;
+        float c = -1 * startBeat;
+        float d = Mathf.Lerp(startAngleOffCenter, endAngleOffCenter, 0.5f);
+
+        for (float i = startBeat; i < endBeat; i += rateOfFire)
+        {
+            for (int j = 0; j < numberOfSpawners; j++)
+            {
+                EnqueueBulletSpawnEvent(i, j, a * Mathf.Sin((b * i) - c) + d);
+            }
         }
     }
 
