@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public bool isGameOver;
     public float xSensitivity { get; private set; }
     public float ySensitivity { get; private set; }
-   
+    private float musicDuration;
 
     public static GameManager Instance { get { return instance; } }
 
@@ -33,6 +33,18 @@ public class GameManager : MonoBehaviour
     public float spawnerRotationSpeed { get; set; }
     int numberOfSpawners;
     static GameObject[] spawnerArray;
+
+    private void Popup()
+    {
+        if (AudioListener.pause && playerInput.pausing && !isGameOver)
+        {
+            Debug.Log("Show pause popup menu");
+        } else if (!isGameOver && audioSource.time == musicDuration)
+        {
+            isGameOver = true;
+            Debug.Log("Show game over menu");
+        } 
+    }
 
     private void EnablePausing()
     {
@@ -174,10 +186,11 @@ public class GameManager : MonoBehaviour
         isGameOver = false;
 
         audioListener = GetComponent<AudioListener>();
+        
         spectrum = new float[numberOfSamples];
 
         audioSource = GetComponent<AudioSource>();
-
+        musicDuration = audioSource.time;
         speed = 1f;
 
         SetUpLevel();
@@ -226,6 +239,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         EnablePausing();
+        Popup();
         if (debugMode)
         {
             songPosition = (float)((AudioSettings.dspTime - dsptimesong) + startTimeInSeconds);
