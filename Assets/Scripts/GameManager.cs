@@ -263,7 +263,7 @@ public class GameManager : MonoBehaviour
             songPosInBeats = songPosition / secPerBeat;
         }
 
-        //Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
+        Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -335,6 +335,7 @@ public class GameManager : MonoBehaviour
                 Level1();
                 break;
             case 1:
+                Level2();
                 break;
             case 2:
                 Level3();
@@ -459,6 +460,29 @@ public class GameManager : MonoBehaviour
         EnqueueChangeAudioSyncerTimeStep(432f, 0.15f);
     }
 
+    void Level2()
+    {
+        //Initial level setup
+        BPM = 97f;
+        bulletSpeed = 1f;
+        spawnerRotationSpeed = 10f;
+        numberOfSpawners = 10;
+        spawnerArray = new GameObject[numberOfSpawners];
+        CreateSpawners();
+        GetComponent<AudioSyncer>().bias = 30f;
+        GetComponent<AudioSyncer>().timeStep = 0.15f;
+
+        //Spawner movement
+
+        //Bullet spawning
+
+        //Bullet speed
+
+        //Audio Syncer Bias (init 30f)
+
+        //Audio Syncer Timestep (init 0.15f)
+    }
+
     void Level3()
     {
         //Initial level setup
@@ -508,7 +532,7 @@ public class GameManager : MonoBehaviour
 
         //Audio Syncer Timestep (init 0.15f)
         EnqueueChangeAudioSyncerBias(100f, 0.1f);
-        EnqueueChangeAudioSyncerBias(132f, 3f);
+        EnqueueChangeAudioSyncerBias(132f, 2f);
     }
 
     void Level4()
