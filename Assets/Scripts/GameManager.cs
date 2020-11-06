@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,6 +25,11 @@ public class GameManager : MonoBehaviour
 
     public float speed { get; set; }
     public int bulletsHit { get; set; }
+    public int bulletsFired { get; set; }
+    private float accuracy;
+    private int finalScore;
+
+    public TextMeshProUGUI accuracyText;
 
     float BPM;
     float secPerBeat;
@@ -39,9 +45,11 @@ public class GameManager : MonoBehaviour
         if (AudioListener.pause && playerInput.pausing && !isGameOver)
         {
             Debug.Log("Show pause popup menu");
-        } else if (!isGameOver && audioSource.time == musicDuration)
+        } else if (!isGameOver && songPosition > musicDuration)
         {
             isGameOver = true;
+            finalScore = (int)Mathf.Lerp(0, 1000000f, accuracy);
+            Debug.Log("Final Score: " + finalScore);
             Debug.Log("Show game over menu");
         } 
     }
@@ -190,8 +198,10 @@ public class GameManager : MonoBehaviour
         spectrum = new float[numberOfSamples];
 
         audioSource = GetComponent<AudioSource>();
-        musicDuration = audioSource.time;
         speed = 1f;
+        bulletsFired = 1;
+        bulletsHit = 0;
+        UpdateHUD();
 
         SetUpLevel();
 
@@ -251,7 +261,7 @@ public class GameManager : MonoBehaviour
             songPosInBeats = songPosition / secPerBeat;
         }
 
-        Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
+        //Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -262,7 +272,7 @@ public class GameManager : MonoBehaviour
         avg /= (numberOfSamples / 4);
         speed = Mathf.Lerp(1f, 3f, avg * 50f);
 
-
+        UpdateHUD();
         CheckForEvents();
     }
 
@@ -309,6 +319,8 @@ public class GameManager : MonoBehaviour
         audioSyncerTimeStepChangeEvents = new ArrayList();
 
         audioSource.clip = audioClip[levelIndex];
+        musicDuration = audioSource.clip.length + 5f;
+
         switch (levelIndex)
         {
             case 0:
@@ -489,7 +501,7 @@ public class GameManager : MonoBehaviour
 
         //Audio Syncer Timestep (init 0.15f)
         EnqueueChangeAudioSyncerBias(100f, 0.1f);
-        EnqueueChangeAudioSyncerBias(132f, 1f);
+        EnqueueChangeAudioSyncerBias(132f, 3f);
     }
 
     void Level4()
@@ -556,7 +568,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //redo with sin curve
     void EnqueueOscillateSurroundPlayer(float startBeat, float endBeat, float rateOfFire, float startAngleOffCenter, float endAngleOffCenter, float reps)
     {
         float a = Mathf.Abs(endAngleOffCenter - startAngleOffCenter) / 2;
@@ -620,5 +631,11 @@ public class GameManager : MonoBehaviour
     void EnqueueChangeAudioSyncerTimeStep(float beat, float timeStep)
     {
         audioSyncerTimeStepChangeEvents.Add(new AudioSyncerTimeStepChangeEventParameters(beat, timeStep));
+    }
+
+    public void UpdateHUD()
+    {
+        accuracy = Mathf.Clamp((bulletsFired - bulletsHit) / (float)bulletsFired, 0f, 100f);
+        accuracyText.text = "Accuracy " + (accuracy * 100).ToString("F2") + "%";
     }
 }
