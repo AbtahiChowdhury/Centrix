@@ -277,7 +277,7 @@ public class GameManager : MonoBehaviour
         UpdateHUD();
         CheckForEvents();
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (playerInput.bombClear)
         {
             SpawnBomb();
         }
