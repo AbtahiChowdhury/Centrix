@@ -22,10 +22,12 @@ public class GameManager : MonoBehaviour
 
     public GameObject spawnerPrefab;
     public GameObject bulletPrefab;
+    public GameObject bombPrefab;
 
     public float speed { get; set; }
     public int bulletsHit { get; set; }
     public int bulletsFired { get; set; }
+    private int bombs;
     private float accuracy;
     private int finalScore;
 
@@ -49,7 +51,6 @@ public class GameManager : MonoBehaviour
         {
             isGameOver = true;
             finalScore = (int)Mathf.Lerp(0, 1000000f, accuracy);
-            Debug.Log("Final Score: " + finalScore);
             Debug.Log("Show game over menu");
         } 
     }
@@ -201,6 +202,7 @@ public class GameManager : MonoBehaviour
         speed = 1f;
         bulletsFired = 1;
         bulletsHit = 0;
+        bombs = 3;
         UpdateHUD();
 
         SetUpLevel();
@@ -274,6 +276,11 @@ public class GameManager : MonoBehaviour
 
         UpdateHUD();
         CheckForEvents();
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            SpawnBomb();
+        }
     }
 
     //Game Over Menu
@@ -636,6 +643,15 @@ public class GameManager : MonoBehaviour
     public void UpdateHUD()
     {
         accuracy = Mathf.Clamp((bulletsFired - bulletsHit) / (float)bulletsFired, 0f, 100f);
-        accuracyText.text = "Accuracy " + (accuracy * 100).ToString("F2") + "%";
+        accuracyText.text = "Accuracy " + (accuracy * 100).ToString("F2") + "%\nBombs " + bombs;
+    }
+
+    public void SpawnBomb()
+    {
+        if (bombs > 0)
+        {
+            Instantiate(bombPrefab, Player.instance.transform.position, Quaternion.identity);
+            bombs--;
+        }
     }
 }

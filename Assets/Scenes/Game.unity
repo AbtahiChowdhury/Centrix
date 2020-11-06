@@ -363,7 +363,7 @@ GameObject:
   - component: {fileID: 814832585}
   - component: {fileID: 814832584}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: accuracy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,7 +519,7 @@ GameObject:
   - component: {fileID: 1075616232}
   - component: {fileID: 1075616231}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -583,7 +583,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!224 &1075616234
 RectTransform:
@@ -776,13 +776,15 @@ MonoBehaviour:
     type: 3}
   bulletPrefab: {fileID: 505250954407813139, guid: df28725a25113274a8ec2bfc3d28c105,
     type: 3}
+  bombPrefab: {fileID: 1414195077330845709, guid: 59115fb42640dab499382ac8c630ca88,
+    type: 3}
   accuracyText: {fileID: 814832584}
   difficulty: 1
   levelIndex: 2
   songPosInBeats: 0
   numberOfSamples: 256
-  debugMode: 1
-  startTimeInSeconds: 70
+  debugMode: 0
+  startTimeInSeconds: 150
 --- !u!4 &1706324499
 Transform:
   m_ObjectHideFlags: 0
