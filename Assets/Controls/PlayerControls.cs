@@ -25,6 +25,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""PS4_X"",
+                    ""type"": ""Button"",
+                    ""id"": ""678d08dd-6976-4d7b-9f58-454d8f2cea2c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
+                },
+                {
+                    ""name"": ""PS4_OPTIONS"",
+                    ""type"": ""Button"",
+                    ""id"": ""d1a660e3-92e9-4f33-a0f3-47af1bdf83ff"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
                 }
             ],
             ""bindings"": [
@@ -38,6 +54,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d8a8f500-2869-470b-a997-bb3d23f7489e"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PS4_X"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""43f01bd2-7c6f-4f8d-97f3-dcdc162aac2c"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PS4_OPTIONS"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -47,6 +85,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
+        m_Gameplay_PS4_X = m_Gameplay.FindAction("PS4_X", throwIfNotFound: true);
+        m_Gameplay_PS4_OPTIONS = m_Gameplay.FindAction("PS4_OPTIONS", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -97,11 +137,15 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Gameplay;
     private IGameplayActions m_GameplayActionsCallbackInterface;
     private readonly InputAction m_Gameplay_Move;
+    private readonly InputAction m_Gameplay_PS4_X;
+    private readonly InputAction m_Gameplay_PS4_OPTIONS;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
         public GameplayActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
+        public InputAction @PS4_X => m_Wrapper.m_Gameplay_PS4_X;
+        public InputAction @PS4_OPTIONS => m_Wrapper.m_Gameplay_PS4_OPTIONS;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -114,6 +158,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
+                @PS4_X.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPS4_X;
+                @PS4_X.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPS4_X;
+                @PS4_X.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPS4_X;
+                @PS4_OPTIONS.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPS4_OPTIONS;
+                @PS4_OPTIONS.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPS4_OPTIONS;
+                @PS4_OPTIONS.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPS4_OPTIONS;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -121,6 +171,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @PS4_X.started += instance.OnPS4_X;
+                @PS4_X.performed += instance.OnPS4_X;
+                @PS4_X.canceled += instance.OnPS4_X;
+                @PS4_OPTIONS.started += instance.OnPS4_OPTIONS;
+                @PS4_OPTIONS.performed += instance.OnPS4_OPTIONS;
+                @PS4_OPTIONS.canceled += instance.OnPS4_OPTIONS;
             }
         }
     }
@@ -128,5 +184,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     public interface IGameplayActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnPS4_X(InputAction.CallbackContext context);
+        void OnPS4_OPTIONS(InputAction.CallbackContext context);
     }
 }

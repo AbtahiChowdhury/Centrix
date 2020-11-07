@@ -28,9 +28,12 @@ public class BulletScroller : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            //Debug.Log("hit player");
             transform.Find("Circle2").GetComponent<SpriteRenderer>().color = Color.red;
             GameManager.Instance.bulletsHit++;
+        }
+        else if (collision.tag == "Bomb")
+        {
+            Destroy(this.gameObject);
         }
     }
 }

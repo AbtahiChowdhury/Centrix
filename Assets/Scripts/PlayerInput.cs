@@ -7,8 +7,11 @@ using UnityEngine.InputSystem;
 public class PlayerInput : MonoBehaviour
 {//Get all user inputs
     private PlayerControls controls;
-    private bool isGamepad = false;
+    public bool isGamepad = false;
     public Vector2 move;
+    public bool pausing;
+    public bool exit;
+    public bool bombClear;
 
     private void Awake()
     {
@@ -25,6 +28,8 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool ps4_x = controls.Gameplay.PS4_X.triggered;
+        bool ps4_options = controls.Gameplay.PS4_OPTIONS.triggered;
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
         float horizontal = Input.GetAxis("Vertical");
@@ -37,6 +42,9 @@ public class PlayerInput : MonoBehaviour
         {
             move = new Vector2(vertical, horizontal);
         }
+        pausing = Input.GetKeyDown(KeyCode.Escape) || ps4_options;
+        bombClear = Input.GetKeyDown(KeyCode.Z) || ps4_x;
+
     }
 
     void JoyStickMove(InputAction.CallbackContext ctx)
@@ -51,6 +59,7 @@ public class PlayerInput : MonoBehaviour
         move = Vector2.zero;
     }
 
+   
     void OnEnable()
     {
         controls.Gameplay.Enable();
