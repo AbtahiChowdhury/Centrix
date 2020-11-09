@@ -538,19 +538,25 @@ public class GameManager : MonoBehaviour
     void Level4()
     {
         //Initial level setup
-        BPM = 135f;
-        bulletSpeed = 3f;
-        spawnerRotationSpeed = 100f;
+        BPM = 180f;
+        bulletSpeed = 1f;
+        spawnerRotationSpeed = 30f;
 
-        numberOfSpawners = 8;
+        numberOfSpawners = 10;
         spawnerArray = new GameObject[numberOfSpawners];
         CreateSpawners();
+        GetComponent<AudioSyncer>().bias = 15f;
+        GetComponent<AudioSyncer>().timeStep = 0.05f;
 
-        EnqueueSpawnerRotationSpeedEventOverTime(260f, 275f, 50f, 200f);
-        EnqueueSpawnerRotationSpeedEventOverTime(276f, 277f, 200f, -100f);
-        EnqueueSpawnerRotationSpeedEvent(277.1f, -80f);
-        EnqueueSpawnerRotationSpeedEvent(335f, 0f);
-        EnqueueSpawnerRotationSpeedEvent(340f, -100f);
+        //Spawner movement
+
+        //Bullet spawning
+
+        //Bullet speed
+
+        //Audio Syncer Bias (init 15f)
+
+        //Audio Syncer Timestep (init 0.15f)
     }
 
 
