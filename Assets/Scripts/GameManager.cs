@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Show pause popup menu");
         } else if (!isGameOver && songPosition > musicDuration)
         {
-            isGameOver = true;
+            EndGame();
             finalScore = (int)Mathf.Lerp(0, 1000000f, accuracy);
             Debug.Log("Show game over menu");
         } 
