@@ -131,6 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 174520903}
   - component: {fileID: 174520902}
+  - component: {fileID: 174520904}
   m_Layer: 5
   m_Name: EndGame
   m_TagString: Untagged
@@ -172,6 +173,30 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &174520904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174520901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9263ee335365f2e4e978997c88179c04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGameOver: 0
+  audioClip: []
+  spawnerPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 0}
+  bombPrefab: {fileID: 0}
+  accuracyText: {fileID: 0}
+  difficulty: 0
+  levelIndex: 0
+  songPosInBeats: 0
+  numberOfSamples: 0
+  debugMode: 0
+  startTimeInSeconds: 0
 --- !u!1 &314829357
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,8 +279,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 174520902}
-        m_MethodName: QuitGame
+      - m_Target: {fileID: 174520904}
+        m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1019,8 +1044,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 174520902}
-        m_MethodName: Startgame
+      - m_Target: {fileID: 174520904}
+        m_MethodName: MainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

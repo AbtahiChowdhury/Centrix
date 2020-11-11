@@ -302,10 +302,34 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Game");
     }
-    
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
+    }
+
     public void ExitGame()
     {//Close the application        
         Application.Quit();
+    }
+    public void Start01()
+    {
+        levelIndex = 0;
+        SceneManager.LoadScene("Game");
+    }
+    public void Start02()
+    {
+        levelIndex = 1;
+        SceneManager.LoadScene("Game");
+    }
+    public void Start03()
+    {
+        levelIndex = 2;
+        SceneManager.LoadScene("Game");
+    }
+    public void Start04()
+    {
+        levelIndex = 3;
+        SceneManager.LoadScene("Game");
     }
 
     void SetUpLevel()
