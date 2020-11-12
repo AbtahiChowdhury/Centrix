@@ -67,6 +67,25 @@ public class GameManager : MonoBehaviour
         } 
     }
 
+    //Pause Menu Buttons
+    public void Resume()
+    {
+        PM.SetActive(false);
+        isPaused = false;
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("quit");
+        Application.Quit();
+    }
+
+    //End of Pause Menu Buttons
     private void EnablePausing()
     {
         if (playerInput.pausing)
