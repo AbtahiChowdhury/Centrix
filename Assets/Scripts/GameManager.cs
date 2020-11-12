@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     private PlayerInput playerInput;
+    public bool isPaused = false;
     public bool isGameOver;
     public float xSensitivity { get; private set; }
     public float ySensitivity { get; private set; }
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
     public GameObject spawnerPrefab;
     public GameObject bulletPrefab;
     public GameObject bombPrefab;
+    public GameObject PM;
 
     public float speed { get; set; }
     public int bulletsHit { get; set; }
@@ -44,10 +46,20 @@ public class GameManager : MonoBehaviour
 
     private void Popup()
     {
-        if (AudioListener.pause && playerInput.pausing && !isGameOver)
+        if (AudioListener.pause && playerInput.pausing && !isGameOver && !isPaused)
         {
+            PM.gameObject.SetActive(true);
+            isPaused = true;
             Debug.Log("Show pause popup menu");
-        } else if (!isGameOver && songPosition > musicDuration)
+        }
+        
+        else if (isPaused && playerInput.pausing)
+        {
+            PM.gameObject.SetActive(false);
+            isPaused = false;
+        }
+
+        else if (!isGameOver && songPosition > musicDuration)
         {
             isGameOver = true;
             finalScore = (int)Mathf.Lerp(0, 1000000f, accuracy);
