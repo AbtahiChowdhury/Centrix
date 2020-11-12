@@ -59,13 +59,8 @@ public class GameManager : MonoBehaviour
     //Pause Menu Buttons
     public void Resume()
     {
-        PM.SetActive(false);
+        pauseMenu.gameObject.SetActive(false);
         isPaused = false;
-    }
-
-    public void MainMenu()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public void QuitGame()
