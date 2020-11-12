@@ -24,8 +24,10 @@ public class GameManager : MonoBehaviour
     public GameObject spawnerPrefab;
     public GameObject bulletPrefab;
     public GameObject bombPrefab;
-    public GameObject PM;
 
+    public GameObject pauseMenu;
+
+    public bool disableRandomBulletSpawning { get; set; }
     public float speed { get; set; }
     public int bulletsHit { get; set; }
     public int bulletsFired { get; set; }
@@ -46,24 +48,11 @@ public class GameManager : MonoBehaviour
 
     private void Popup()
     {
-        if (AudioListener.pause && playerInput.pausing && !isGameOver && !isPaused)
+        if (songPosition > musicDuration)
         {
-            PM.gameObject.SetActive(true);
-            isPaused = true;
-            Debug.Log("Show pause popup menu");
-        }
-        
-        else if (isPaused && playerInput.pausing)
-        {
-            PM.gameObject.SetActive(false);
-            isPaused = false;
-        }
-
-        else if (!isGameOver && songPosition > musicDuration)
-        {
-            EndGame();
             finalScore = (int)Mathf.Lerp(0, 1000000f, accuracy);
             Debug.Log("Show game over menu");
+            //EndGame();
         } 
     }
 
@@ -102,6 +91,8 @@ public class GameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
             }
             Player.instance.GetComponent<PlayerMovement>().paused = !Player.instance.GetComponent<PlayerMovement>().paused;
+            isPaused = !isPaused;
+            pauseMenu.gameObject.SetActive(isPaused);
         }
     }
 
@@ -109,6 +100,18 @@ public class GameManager : MonoBehaviour
     {
         return spawnerArray;
     }
+
+    struct ToggleRandomBulletSpawningEventParameters
+    {
+        public float beat { get; set; }
+
+        public ToggleRandomBulletSpawningEventParameters(float beat)
+        {
+            this.beat = beat;
+        }
+    }
+    ArrayList toggleRandomBulletSpawningEvents;
+    int toggleRandomBulletSpawningEventsIndex;
 
     struct SpawnerRotationSpeedEventParameters
     {
@@ -230,6 +233,7 @@ public class GameManager : MonoBehaviour
         spectrum = new float[numberOfSamples];
 
         audioSource = GetComponent<AudioSource>();
+        disableRandomBulletSpawning = false;
         speed = 1f;
         bulletsFired = 1;
         bulletsHit = 0;
@@ -244,6 +248,11 @@ public class GameManager : MonoBehaviour
             dsptimesong = (float)AudioSettings.dspTime;
             audioSource.time = startTimeInSeconds;
             songPosInBeats = startTimeInSeconds / secPerBeat;
+            while (toggleRandomBulletSpawningEventsIndex < toggleRandomBulletSpawningEvents.Count && songPosInBeats > ((ToggleRandomBulletSpawningEventParameters)toggleRandomBulletSpawningEvents[toggleRandomBulletSpawningEventsIndex]).beat)
+            {
+                disableRandomBulletSpawning = !disableRandomBulletSpawning;
+                toggleRandomBulletSpawningEventsIndex++;
+            }
             while (bulletSpeedEventsIndex < bulletSpeedEvents.Count && songPosInBeats > ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).beat)
             {
                 bulletSpeed = ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).speed;
@@ -294,7 +303,7 @@ public class GameManager : MonoBehaviour
             songPosInBeats = songPosition / secPerBeat;
         }
 
-        //Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
+        Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -342,66 +351,31 @@ public class GameManager : MonoBehaviour
     {//Close the application        
         Application.Quit();
     }
+
     public void Start01()
     {
         levelIndex = 0;
         SceneManager.LoadScene("Game");
     }
+
     public void Start02()
     {
         levelIndex = 1;
         SceneManager.LoadScene("Game");
     }
+
     public void Start03()
     {
         levelIndex = 2;
         SceneManager.LoadScene("Game");
     }
+
     public void Start04()
     {
         levelIndex = 3;
         SceneManager.LoadScene("Game");
     }
 
-    void SetUpLevel()
-    {
-        spawnerRotationSpeedEventsIndex = 0;
-        spawnerRotationSpeedEvents = new ArrayList();
-
-        bulletSpawnEventsIndex = 0;
-        bulletSpawnEvents = new ArrayList();
-
-        bulletSpeedEventsIndex = 0;
-        bulletSpeedEvents = new ArrayList();
-
-        audioSyncerBiasChangeEventsIndex = 0;
-        audioSyncerBiasChangeEvents = new ArrayList();
-
-        audioSyncerTimeStepChangeEventsIndex = 0;
-        audioSyncerTimeStepChangeEvents = new ArrayList();
-
-        audioSource.clip = audioClip[levelIndex];
-        musicDuration = audioSource.clip.length + 10f;
-
-        switch (levelIndex)
-        {
-            case 0:
-                //level 1 - samsara
-                Level1();
-                break;
-            case 1:
-                Level2();
-                break;
-            case 2:
-                Level3();
-                break;
-            case 3:
-                Level4();
-                break;
-            default:
-                break;
-        }
-    }
 
     void CreateSpawners()
     {
@@ -415,6 +389,13 @@ public class GameManager : MonoBehaviour
 
     void CheckForEvents()
     {
+        //toggle random bullet spawning events
+        if (toggleRandomBulletSpawningEventsIndex < toggleRandomBulletSpawningEvents.Count && songPosInBeats > ((ToggleRandomBulletSpawningEventParameters)toggleRandomBulletSpawningEvents[toggleRandomBulletSpawningEventsIndex]).beat)
+        {
+            disableRandomBulletSpawning = !disableRandomBulletSpawning;
+            toggleRandomBulletSpawningEventsIndex++;
+        }
+
         //bullet speed events
         if (bulletSpeedEventsIndex < bulletSpeedEvents.Count && songPosInBeats > ((BulletSpeedEventParameters)bulletSpeedEvents[bulletSpeedEventsIndex]).beat)
         {
@@ -448,6 +429,49 @@ public class GameManager : MonoBehaviour
         {
             GetComponent<AudioSyncer>().timeStep = ((AudioSyncerTimeStepChangeEventParameters)audioSyncerTimeStepChangeEvents[audioSyncerTimeStepChangeEventsIndex]).timestep;
             audioSyncerBiasChangeEventsIndex++;
+        }
+    }
+
+    void SetUpLevel()
+    {
+
+        toggleRandomBulletSpawningEventsIndex = 0;
+        toggleRandomBulletSpawningEvents = new ArrayList();
+
+        spawnerRotationSpeedEventsIndex = 0;
+        spawnerRotationSpeedEvents = new ArrayList();
+
+        bulletSpawnEventsIndex = 0;
+        bulletSpawnEvents = new ArrayList();
+
+        bulletSpeedEventsIndex = 0;
+        bulletSpeedEvents = new ArrayList();
+
+        audioSyncerBiasChangeEventsIndex = 0;
+        audioSyncerBiasChangeEvents = new ArrayList();
+
+        audioSyncerTimeStepChangeEventsIndex = 0;
+        audioSyncerTimeStepChangeEvents = new ArrayList();
+
+        audioSource.clip = audioClip[levelIndex];
+        musicDuration = audioSource.clip.length + 5f;
+
+        switch (levelIndex)
+        {
+            case 0:
+                Level1();
+                break;
+            case 1:
+                Level2();
+                break;
+            case 2:
+                Level3();
+                break;
+            case 3:
+                Level4();
+                break;
+            default:
+                break;
         }
     }
 
@@ -504,6 +528,8 @@ public class GameManager : MonoBehaviour
         EnqueueBulletSpeedEventOverTime(425f, 432f, 50, 3f, 7f);
         EnqueueBulletSpeedEvent(371f, 2f);
 
+        //Toggle Random Bullet Spawning
+
         //Audio Syncer Bias (init 30f)
         EnqueueChangeAudioSyncerBias(193f, 15f);
         EnqueueChangeAudioSyncerBias(240f, 30f);
@@ -532,6 +558,8 @@ public class GameManager : MonoBehaviour
         //Bullet spawning
 
         //Bullet speed
+
+        //Toggle Random Bullet Spawning
 
         //Audio Syncer Bias (init 30f)
 
@@ -572,6 +600,8 @@ public class GameManager : MonoBehaviour
         EnqueueOscillateSurroundPlayer(164f, 195f, 0.2f, -45f, -30f, 0.2f);
         EnqueueOscillateSurroundPlayer(195f, 220f, 0.1f, -45f, -30f, 0.2f);
         EnqueueOscillateSurroundPlayer(220f, 228f, 0.05f, -45f, -25f, 0.01f);
+
+        //Toggle Random Bullet Spawning
 
         //Bullet speed
         EnqueueBulletSpeedEvent(36f, 3f);
@@ -621,6 +651,9 @@ public class GameManager : MonoBehaviour
         EnqueueBulletSpeedEventOverTime(295f, 345f, 200, 1f, 2f);
         EnqueueBulletSpeedEvent(346f, 0.75f);
 
+        //Toggle Random Bullet Spawning
+        EnqueueToggleRandomBulletSpawningEvent(365f);
+
         //Audio Syncer Bias (init 15f)
 
         //Audio Syncer Timestep (init 0.15f)
@@ -631,6 +664,18 @@ public class GameManager : MonoBehaviour
 
 
 
+
+
+
+
+
+
+
+
+    void EnqueueToggleRandomBulletSpawningEvent(float beat)
+    {
+        toggleRandomBulletSpawningEvents.Add(new ToggleRandomBulletSpawningEventParameters(beat));
+    }
 
     void EnqueueBulletSpeedEvent(float beat, float speed)
     {
