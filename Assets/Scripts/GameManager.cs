@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
         else if (!isGameOver && songPosition > musicDuration)
         {
-            isGameOver = true;
+            EndGame();
             finalScore = (int)Mathf.Lerp(0, 1000000f, accuracy);
             Debug.Log("Show game over menu");
         } 
@@ -275,7 +275,7 @@ public class GameManager : MonoBehaviour
             songPosInBeats = songPosition / secPerBeat;
         }
 
-        Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
+        //Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -314,10 +314,34 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Game");
     }
-    
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
+    }
+
     public void ExitGame()
     {//Close the application        
         Application.Quit();
+    }
+    public void Start01()
+    {
+        levelIndex = 0;
+        SceneManager.LoadScene("Game");
+    }
+    public void Start02()
+    {
+        levelIndex = 1;
+        SceneManager.LoadScene("Game");
+    }
+    public void Start03()
+    {
+        levelIndex = 2;
+        SceneManager.LoadScene("Game");
+    }
+    public void Start04()
+    {
+        levelIndex = 3;
+        SceneManager.LoadScene("Game");
     }
 
     void SetUpLevel()
@@ -338,7 +362,7 @@ public class GameManager : MonoBehaviour
         audioSyncerTimeStepChangeEvents = new ArrayList();
 
         audioSource.clip = audioClip[levelIndex];
-        musicDuration = audioSource.clip.length + 5f;
+        musicDuration = audioSource.clip.length + 10f;
 
         switch (levelIndex)
         {
@@ -550,19 +574,39 @@ public class GameManager : MonoBehaviour
     void Level4()
     {
         //Initial level setup
-        BPM = 135f;
-        bulletSpeed = 3f;
-        spawnerRotationSpeed = 100f;
+        BPM = 180f;
+        bulletSpeed = 0.5f;
+        spawnerRotationSpeed = 15f;
 
-        numberOfSpawners = 8;
+        numberOfSpawners = 12;
         spawnerArray = new GameObject[numberOfSpawners];
         CreateSpawners();
+        GetComponent<AudioSyncer>().bias = 15f;
+        GetComponent<AudioSyncer>().timeStep = 0.08f;
 
-        EnqueueSpawnerRotationSpeedEventOverTime(260f, 275f, 50f, 200f);
-        EnqueueSpawnerRotationSpeedEventOverTime(276f, 277f, 200f, -100f);
-        EnqueueSpawnerRotationSpeedEvent(277.1f, -80f);
-        EnqueueSpawnerRotationSpeedEvent(335f, 0f);
-        EnqueueSpawnerRotationSpeedEvent(340f, -100f);
+        //Spawner movement
+        EnqueueSpawnerRotationSpeedEvent(50f, 30f);
+        EnqueueSpawnerRotationSpeedEvent(148f, 25f);
+        EnqueueSpawnerRotationSpeedEvent(197f, 15f);
+        EnqueueSpawnerRotationSpeedEvent(247f, 30f);
+        EnqueueSpawnerRotationSpeedEventOverTime(295f, 345f, 30f, 45f);
+        EnqueueSpawnerRotationSpeedEvent(346f, 20f);
+
+        //Bullet spawning
+
+        //Bullet speed
+        EnqueueBulletSpeedEvent(50f, 1f);
+        EnqueueBulletSpeedEvent(148f, 0.75f);
+        EnqueueBulletSpeedEvent(197f, 0.5f);
+        EnqueueBulletSpeedEvent(247f, 1f);
+        EnqueueBulletSpeedEventOverTime(295f, 345f, 200, 1f, 2f);
+        EnqueueBulletSpeedEvent(346f, 0.75f);
+
+        //Audio Syncer Bias (init 15f)
+
+        //Audio Syncer Timestep (init 0.15f)
+        EnqueueChangeAudioSyncerTimeStep(325f, 0.05f);
+        EnqueueChangeAudioSyncerTimeStep(345f, 0.09f);
     }
 
 
