@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject bombPrefab;
 
+    public GameObject hud;
     public GameObject pauseMenu;
 
     public bool disableRandomBulletSpawning { get; set; }
@@ -56,20 +57,6 @@ public class GameManager : MonoBehaviour
         } 
     }
 
-    //Pause Menu Buttons
-    public void Resume()
-    {
-        pauseMenu.gameObject.SetActive(false);
-        isPaused = false;
-    }
-
-    public void QuitGame()
-    {
-        Debug.Log("quit");
-        Application.Quit();
-    }
-
-    //End of Pause Menu Buttons
     private void EnablePausing()
     {
         if (playerInput.pausing)
@@ -88,6 +75,7 @@ public class GameManager : MonoBehaviour
             Player.instance.GetComponent<PlayerMovement>().paused = !Player.instance.GetComponent<PlayerMovement>().paused;
             isPaused = !isPaused;
             pauseMenu.gameObject.SetActive(isPaused);
+            hud.gameObject.SetActive(!isPaused);
         }
     }
 
@@ -335,15 +323,24 @@ public class GameManager : MonoBehaviour
     //For Menu Start/Restart Game
     public void StartGame()
     {
+        AudioListener.pause = false;
+        Time.timeScale = 1;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("Game");
     }
     public void MainMenu()
     {
+        AudioListener.pause = false;
+        Time.timeScale = 1;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("Main Menu");
     }
 
     public void ExitGame()
-    {//Close the application        
+    {
+        //Close the application        
         Application.Quit();
     }
 
