@@ -5,11 +5,12 @@ using UnityEngine;
 public class BulletScroller : MonoBehaviour
 {
     public Vector3 direction { get; set; }
+    private bool hit;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        hit = false;
     }
 
     // Update is called once per frame
@@ -28,8 +29,12 @@ public class BulletScroller : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            transform.Find("Circle2").GetComponent<SpriteRenderer>().color = Color.red;
-            GameManager.Instance.bulletsHit++;
+            if (!hit)
+            {
+                transform.Find("Circle2").GetComponent<SpriteRenderer>().color = Color.red;
+                GameManager.Instance.bulletsHit++;
+                hit = true;
+            }
         }
         else if (collision.tag == "Bomb")
         {
