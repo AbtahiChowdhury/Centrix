@@ -20,4 +20,22 @@ public class MainMenu : MonoBehaviour
         Debug.Log("quit");
         Application.Quit();
     }
+
+    public void StartLevel1()
+    {
+        //load 0 into some static class
+        SceneManager.LoadScene("Game");
+    }
+
+    public void StartLevel2()
+    {
+        //load 1 into some static class
+        SceneManager.LoadScene("Game");
+    }
+
+    public void StartLevel3()
+    {
+        //load 2 into some static class
+        SceneManager.LoadScene("Game");
+    }
 }

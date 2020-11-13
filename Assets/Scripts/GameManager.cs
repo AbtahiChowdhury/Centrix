@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     private PlayerInput playerInput;
-    public bool isPaused = false;
-    public bool isGameOver;
+    private bool isPaused = false;
+    private bool isGameOver;
     public float xSensitivity { get; private set; }
     public float ySensitivity { get; private set; }
     private float musicDuration;
@@ -182,7 +182,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-
         playerInput = Player.instance.GetComponent<PlayerInput>();
         xSensitivity = ySensitivity = 100.0f;
         if (instance != null && instance !=this)
@@ -362,13 +361,6 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
-    public void Start04()
-    {
-        levelIndex = 3;
-        SceneManager.LoadScene("Game");
-    }
-
-
     void CreateSpawners()
     {
         for(int i = 0; i < numberOfSpawners; i++)
@@ -459,9 +451,6 @@ public class GameManager : MonoBehaviour
             case 2:
                 Level3();
                 break;
-            case 3:
-                Level4();
-                break;
             default:
                 break;
         }
@@ -536,31 +525,6 @@ public class GameManager : MonoBehaviour
     void Level2()
     {
         //Initial level setup
-        BPM = 97f;
-        bulletSpeed = 1f;
-        spawnerRotationSpeed = 10f;
-        numberOfSpawners = 10;
-        spawnerArray = new GameObject[numberOfSpawners];
-        CreateSpawners();
-        GetComponent<AudioSyncer>().bias = 30f;
-        GetComponent<AudioSyncer>().timeStep = 0.15f;
-
-        //Spawner movement
-
-        //Bullet spawning
-
-        //Bullet speed
-
-        //Toggle Random Bullet Spawning
-
-        //Audio Syncer Bias (init 30f)
-
-        //Audio Syncer Timestep (init 0.15f)
-    }
-
-    void Level3()
-    {
-        //Initial level setup
         BPM = 140f;
         bulletSpeed = 1f;
         spawnerRotationSpeed = 15f;
@@ -612,7 +576,7 @@ public class GameManager : MonoBehaviour
         EnqueueChangeAudioSyncerBias(132f, 2f);
     }
 
-    void Level4()
+    void Level3()
     {
         //Initial level setup
         BPM = 180f;
@@ -634,6 +598,7 @@ public class GameManager : MonoBehaviour
         EnqueueSpawnerRotationSpeedEvent(346f, 20f);
 
         //Bullet spawning
+        EnqueueSurroundPlayer(310f, 375f, 1f, -45f, -5f);
 
         //Bullet speed
         EnqueueBulletSpeedEvent(50f, 1f);
@@ -644,13 +609,13 @@ public class GameManager : MonoBehaviour
         EnqueueBulletSpeedEvent(346f, 0.75f);
 
         //Toggle Random Bullet Spawning
-        EnqueueToggleRandomBulletSpawningEvent(365f);
+        EnqueueToggleRandomBulletSpawningEvent(360f);
 
         //Audio Syncer Bias (init 15f)
 
         //Audio Syncer Timestep (init 0.15f)
         EnqueueChangeAudioSyncerTimeStep(325f, 0.05f);
-        EnqueueChangeAudioSyncerTimeStep(345f, 0.09f);
+        EnqueueChangeAudioSyncerTimeStep(345f, 2f);
     }
 
 
