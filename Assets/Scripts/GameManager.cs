@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     private PlayerInput playerInput;
     private bool isPaused = false;
-    private bool isGameOver;
     public float xSensitivity { get; private set; }
     public float ySensitivity { get; private set; }
     private float musicDuration;
@@ -27,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject hud;
     public GameObject pauseMenu;
+    public GameObject endOfLevel;
 
     public bool disableRandomBulletSpawning { get; set; }
     public float speed { get; set; }
@@ -35,8 +35,10 @@ public class GameManager : MonoBehaviour
     private int bombs;
     private float accuracy;
     private int finalScore;
+    private bool disablePausing = false;
 
     public TextMeshProUGUI accuracyText;
+    public TextMeshProUGUI finalScoreText;
 
     float BPM;
     float secPerBeat;
@@ -51,15 +53,19 @@ public class GameManager : MonoBehaviour
     {
         if (songPosition > musicDuration)
         {
+            disablePausing = true;
             finalScore = (int)Mathf.Lerp(0, 1000000f, accuracy);
-            Debug.Log("Show game over menu");
-            //EndGame();
+            hud.gameObject.SetActive(false);
+            finalScoreText.text = "Score: " + finalScore;
+            endOfLevel.gameObject.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         } 
     }
 
     private void EnablePausing()
     {
-        if (playerInput.pausing)
+        if (playerInput.pausing && !disablePausing)
         {
             AudioListener.pause = !AudioListener.pause;
             Time.timeScale = (Time.timeScale == 0) ? 1 : 0;
@@ -208,7 +214,6 @@ public class GameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-        isGameOver = false;
 
         audioListener = GetComponent<AudioListener>();
         
@@ -303,20 +308,6 @@ public class GameManager : MonoBehaviour
         {
             SpawnBomb();
         }
-    }
-
-    //Game Over Menu
-    public void EndGame()
-    {
-        isGameOver = true;
-        if (isGameOver)
-        {
-            isGameOver = false;
-            Debug.Log("GAME OVER");
-            Cursor.lockState = CursorLockMode.None;
-            SceneManager.LoadScene("GameOver"); //TODO: Make this scene
-        }
-
     }
 
     //For Menu Start/Restart Game
