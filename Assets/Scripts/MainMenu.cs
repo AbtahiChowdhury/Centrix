@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
+
 public class MainMenu : MonoBehaviour
 {
-   
+    public TextMeshProUGUI levelInfo;
+
     public void PlayGame()
     {
         SceneManager.LoadScene("Game");
@@ -37,5 +40,26 @@ public class MainMenu : MonoBehaviour
     {
         //load 2 into some static class
         SceneManager.LoadScene("Game");
+    }
+
+    public void SetLevel1Info()
+    {
+        levelInfo.text = "Level: Samsara\n\n" +
+                         "Song: Samsara\n" +
+                         "Artist: Xtrullor";
+    }
+
+    public void SetLevel2Info()
+    {
+        levelInfo.text = "Level: Glacier Galaxy\n\n" +
+                         "Song: Glacier Galaxy\n" +
+                         "Artist: EEK! & Lockyn";
+    }
+
+    public void SetLevel3Info()
+    {
+        levelInfo.text = "Level: Abyss of 7th\n\n" +
+                         "Song: Abyss of 7th\n" +
+                         "Artist: Nexhend";
     }
 }

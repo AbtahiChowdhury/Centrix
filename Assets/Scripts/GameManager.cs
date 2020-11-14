@@ -285,7 +285,7 @@ public class GameManager : MonoBehaviour
             songPosInBeats = songPosition / secPerBeat;
         }
 
-        Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
+        //Debug.Log("" + audioSource.time + " -> " + songPosInBeats);
 
         AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         float avg = 0;
@@ -497,16 +497,16 @@ public class GameManager : MonoBehaviour
 
         //Bullet speed
         EnqueueBulletSpeedEvent(49f, 4f);
-        EnqueueBulletSpeedEventOverTime(176f, 240f, 320, 4f, 1.5f);
+        EnqueueBulletSpeedEventOverTime(176f, 240f, 4f, 1.5f);
         EnqueueBulletSpeedEvent(240.5f, 2.5f);
         EnqueueBulletSpeedEvent(257f, 3f);
-        EnqueueBulletSpeedEventOverTime(273f, 287f, 85, 3f, 4f);
-        EnqueueBulletSpeedEventOverTime(287f, 298f, 80, 4f, 6f);
-        EnqueueBulletSpeedEventOverTime(298f, 304f, 60, 1.5f, 2f);
+        EnqueueBulletSpeedEventOverTime(273f, 287f, 3f, 4f);
+        EnqueueBulletSpeedEventOverTime(287f, 298f, 4f, 6f);
+        EnqueueBulletSpeedEventOverTime(298f, 304f, 1.5f, 2f);
         EnqueueBulletSpeedEvent(307f, 4.5f);
         EnqueueBulletSpeedEvent(369f, 1f);
         EnqueueBulletSpeedEvent(371f, 4.5f);
-        EnqueueBulletSpeedEventOverTime(425f, 432f, 50, 3f, 7f);
+        EnqueueBulletSpeedEventOverTime(425f, 432f, 3f, 7f);
         EnqueueBulletSpeedEvent(371f, 2f);
 
         //Toggle Random Bullet Spawning
@@ -528,7 +528,7 @@ public class GameManager : MonoBehaviour
         BPM = 140f;
         bulletSpeed = 1f;
         spawnerRotationSpeed = 15f;
-        numberOfSpawners = 5;
+        numberOfSpawners = 6;
         spawnerArray = new GameObject[numberOfSpawners];
         CreateSpawners();
         GetComponent<AudioSyncer>().bias = 100f;
@@ -546,6 +546,22 @@ public class GameManager : MonoBehaviour
         EnqueueSpawnerRotationSpeedEventOverTime(220f, 225f, -120f, -220f);
         EnqueueSpawnerRotationSpeedEventOverTime(225f, 228f, -220f, -500f);
         EnqueueSpawnerRotationSpeedEvent(228.5f, 150f);
+        EnqueueSpawnerRotationSpeedEventOverTime(230f, 232f, 150f, 50f);
+        EnqueueSpawnerRotationSpeedEvent(232.1f, 150f);
+        EnqueueSpawnerRotationSpeedEvent(234f, 250f);
+        EnqueueSpawnerRotationSpeedEvent(237f, 150f);
+        EnqueueSpawnerRotationSpeedEventOverTime(238f, 240f, 150f, 50f);
+        EnqueueSpawnerRotationSpeedEvent(240.1f, 150f);
+        EnqueueSpawnerRotationSpeedEvent(242f, 250f);
+        EnqueueSpawnerRotationSpeedEvent(244f, 150f);
+        EnqueueSpawnerRotationSpeedEventOverTime(246f, 248f, 150f, 50f);
+        EnqueueSpawnerRotationSpeedEvent(248.1f, 150f);
+        EnqueueSpawnerRotationSpeedEventOverTime(255f, 258f, 150f, 50f);
+        EnqueueSpawnerRotationSpeedEvent(258.1f, 250f);
+        EnqueueSpawnerRotationSpeedEvent(260f, 300f);
+        EnqueueSpawnerRotationSpeedEventOverTime(284f, 291f, 300f, 30f);
+        EnqueueSpawnerRotationSpeedEvent(292f, -60f);
+        EnqueueSpawnerRotationSpeedEventOverTime(356f, 386f, -60f, 0f);
 
         //Bullet spawning
         EnqueueSurroundPlayer(1f, 36f, 0.25f, 35f, 10f);
@@ -555,25 +571,52 @@ public class GameManager : MonoBehaviour
         EnqueueOscillateSurroundPlayer(132f, 164f, 0.2f, 45f, 20f, 0.15f);
         EnqueueOscillateSurroundPlayer(164f, 195f, 0.2f, -45f, -30f, 0.2f);
         EnqueueOscillateSurroundPlayer(195f, 220f, 0.1f, -45f, -30f, 0.2f);
-        EnqueueOscillateSurroundPlayer(220f, 228f, 0.05f, -45f, -25f, 0.01f);
+        EnqueueOscillateSurroundPlayer(220f, 227f, 0.05f, -45f, -25f, 0.01f);
+        EnqueueSurroundPlayer(228f, 256f, 0.1f, 3, 0f);
+        EnqueueSurroundPlayer(260f, 284f, 0.15f, 2.5f, 1);
+        EnqueueOscillateSurroundPlayer(292f, 356f, 0.1f, -45f, -25f, 0.1f);
 
         //Toggle Random Bullet Spawning
+        EnqueueToggleRandomBulletSpawningEvent(228f);
+        EnqueueToggleRandomBulletSpawningEvent(258f);
+        EnqueueToggleRandomBulletSpawningEvent(370f);
 
         //Bullet speed
         EnqueueBulletSpeedEvent(36f, 3f);
         EnqueueBulletSpeedEvent(100f, 1.5f);
         EnqueueBulletSpeedEvent(132f, 2.5f);
-        EnqueueBulletSpeedEventOverTime(195f, 220f, 200, 2.5f, 4.5f);
-        EnqueueBulletSpeedEventOverTime(220f, 228f, 200, 4.5f, 7f);
-        EnqueueBulletSpeedEvent(228.5f, 4f);
+        EnqueueBulletSpeedEventOverTime(195f, 220f, 2.5f, 4.5f);
+        EnqueueBulletSpeedEventOverTime(220f, 228f, 4.5f, 7f);
+        EnqueueBulletSpeedEvent(228.5f, 3f);
+        EnqueueBulletSpeedEventOverTime(230f, 232f, 3f, 1f);
+        EnqueueBulletSpeedEvent(232.1f, 3f);
+        EnqueueBulletSpeedEvent(234f, 4.5f);
+        EnqueueBulletSpeedEvent(237f, 3f);
+        EnqueueBulletSpeedEventOverTime(238f, 240f, 3f, 1f);
+        EnqueueBulletSpeedEvent(240.1f, 3f);
+        EnqueueBulletSpeedEvent(242f, 4.5f);
+        EnqueueBulletSpeedEvent(244f, 3f);
+        EnqueueBulletSpeedEventOverTime(246f, 248f, 3f, 1f);
+        EnqueueBulletSpeedEvent(248.1f, 3f);
+        EnqueueBulletSpeedEventOverTime(255f, 258f, 3f, 1f);
+        EnqueueBulletSpeedEvent(258.1f, 5f);
+        EnqueueBulletSpeedEventOverTime(284f, 291f, 5f, 2f);
+        EnqueueBulletSpeedEvent(292f, 3f);
+        EnqueueBulletSpeedEventOverTime(356f, 386f, 3f, 0.5f);
 
         //Audio Syncer Bias (init 15f)
         EnqueueChangeAudioSyncerBias(36f, 15f);
-        EnqueueChangeAudioSyncerBias(100f, 30f);
+        EnqueueChangeAudioSyncerBias(100f, 5f);
+        EnqueueChangeAudioSyncerBias(160f, 15f);
+        EnqueueChangeAudioSyncerBias(260f, 30f);
+        EnqueueChangeAudioSyncerBias(284f, 15f);
 
         //Audio Syncer Timestep (init 0.15f)
         EnqueueChangeAudioSyncerBias(100f, 0.1f);
-        EnqueueChangeAudioSyncerBias(132f, 2f);
+        EnqueueChangeAudioSyncerBias(132f, 1f);
+        EnqueueChangeAudioSyncerBias(260f, 20f);
+        EnqueueChangeAudioSyncerBias(284f, 10f);
+        EnqueueChangeAudioSyncerBias(356f, 1f);
     }
 
     void Level3()
@@ -605,7 +648,7 @@ public class GameManager : MonoBehaviour
         EnqueueBulletSpeedEvent(148f, 0.75f);
         EnqueueBulletSpeedEvent(197f, 0.5f);
         EnqueueBulletSpeedEvent(247f, 1f);
-        EnqueueBulletSpeedEventOverTime(295f, 345f, 200, 1f, 2f);
+        EnqueueBulletSpeedEventOverTime(295f, 345f, 1f, 2f);
         EnqueueBulletSpeedEvent(346f, 0.75f);
 
         //Toggle Random Bullet Spawning
@@ -639,8 +682,9 @@ public class GameManager : MonoBehaviour
         bulletSpeedEvents.Add(new BulletSpeedEventParameters(beat, speed));
     }
 
-    void EnqueueBulletSpeedEventOverTime(float startBeat, float endBeat, int numberOfSteps, float startSpeed, float endSpeed)
+    void EnqueueBulletSpeedEventOverTime(float startBeat, float endBeat, float startSpeed, float endSpeed)
     {
+        int numberOfSteps = ((int)(endBeat - startBeat)) * 5;
         float beatStepSize = (endBeat - startBeat) / numberOfSteps;
         float speedStepSize = (endSpeed - startSpeed) / numberOfSteps;
         float currentSpeed = startSpeed;
@@ -710,6 +754,17 @@ public class GameManager : MonoBehaviour
         for (float i = startBeat; i < endBeat; i += rateOfFire)
         {
             for (int j = 0; j < numberOfSpawners; j++)
+            {
+                EnqueueBulletSpawnEvent(i, j, angleOffCenter);
+            }
+        }
+    }
+
+    void EnqueueSurroundPlayer(float startBeat, float endBeat, float rateOfFire, int spawnerSteps, float angleOffCenter)
+    {
+        for (float i = startBeat; i < endBeat; i += rateOfFire)
+        {
+            for (int j = 0; j < numberOfSpawners; j+=spawnerSteps)
             {
                 EnqueueBulletSpawnEvent(i, j, angleOffCenter);
             }
