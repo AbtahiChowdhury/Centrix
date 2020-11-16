@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerInput playerInput;
     public bool paused = false;
-    public float sensitivity = 1.5f;
+    public static float sensitivity;
 
     private void Awake()
     {
@@ -35,7 +35,8 @@ public class PlayerMovement : MonoBehaviour
             0
         );
     }
-    
+
+
     // Update is called once per frame
     void Update()
     {

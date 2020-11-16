@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public float sensitivity;
+    //public float sensitivity = 1.5f;
+    //public static float changeSensitivity = 1.5f; //To pass into PlayerMovement
     public void PlayGame()
     {
         SceneManager.LoadScene("Game");
@@ -24,8 +25,7 @@ public class MainMenu : MonoBehaviour
 
     public void SetSensitivity(float Sensitivity)
     {
-        sensitivity = Sensitivity;
-        Debug.Log(sensitivity);
+        PlayerMovement.sensitivity = Sensitivity;
     }
 
     public void StartLevel1()
