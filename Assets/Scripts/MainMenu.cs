@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class MainMenu : MonoBehaviour
 {
-   
     public void PlayGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("Game");
     }
 
-    public void Startgame()
+    public void OpenMainMenu()
     {
         SceneManager.LoadScene("Main Menu");
     }
@@ -19,5 +19,23 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("quit");
         Application.Quit();
+    }
+
+    public void StartLevel1()
+    {
+        //load 0 into some static class
+        SceneManager.LoadScene("Game");
+    }
+
+    public void StartLevel2()
+    {
+        //load 1 into some static class
+        SceneManager.LoadScene("Game");
+    }
+
+    public void StartLevel3()
+    {
+        //load 2 into some static class
+        SceneManager.LoadScene("Game");
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.UI;
 
 public class PlayerInput : MonoBehaviour
 {//Get all user inputs
@@ -22,7 +22,6 @@ public class PlayerInput : MonoBehaviour
 
         controls.Gameplay.Move.performed += ctx => JoyStickMove(ctx);
         controls.Gameplay.Move.canceled += ctx => JoyStickStop();
-
 
     }
     // Update is called once per frame
