@@ -334,24 +334,6 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void Start01()
-    {
-        levelIndex = 0;
-        SceneManager.LoadScene("Game");
-    }
-
-    public void Start02()
-    {
-        levelIndex = 1;
-        SceneManager.LoadScene("Game");
-    }
-
-    public void Start03()
-    {
-        levelIndex = 2;
-        SceneManager.LoadScene("Game");
-    }
-
     void CreateSpawners()
     {
         for(int i = 0; i < numberOfSpawners; i++)
@@ -790,7 +772,7 @@ public class GameManager : MonoBehaviour
     public void UpdateHUD()
     {
         accuracy = Mathf.Clamp((bulletsFired - bulletsHit) / (float)bulletsFired, 0f, 100f);
-        accuracyText.text = "Accuracy " + (accuracy * 100).ToString("F2") + "%\nBombs " + bombs;
+        accuracyText.text = "Accuracy: " + (accuracy * 100).ToString("F2") + "%\nBombs: " + bombs;
     }
 
     public void SpawnBomb()
