@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
     public GameManager GameManager;
     //public float sensitivity = 1.5f;
     //public static float changeSensitivity = 1.5f; //To pass into PlayerMovement
+
     public void PlayGame()
     {
         SceneManager.LoadScene("Game");

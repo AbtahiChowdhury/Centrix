@@ -8,6 +8,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
+
     private PlayerInput playerInput;
     private bool isPaused = false;
     public float xSensitivity { get; private set; }
