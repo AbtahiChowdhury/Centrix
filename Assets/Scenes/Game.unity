@@ -369,7 +369,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 0
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -3037,7 +3037,12 @@ PrefabInstance:
     - target: {fileID: 3218189718736400864, guid: f1bdd5cf2c64d444a8a82b0b3a6c9fca,
         type: 3}
       propertyPath: mouseSensitivity
-      value: 15
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3218189718736400864, guid: f1bdd5cf2c64d444a8a82b0b3a6c9fca,
+        type: 3}
+      propertyPath: sensitivity
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3218189718736400865, guid: f1bdd5cf2c64d444a8a82b0b3a6c9fca,
         type: 3}
