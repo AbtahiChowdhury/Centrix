@@ -176,7 +176,7 @@ public class GameManager : MonoBehaviour
     int audioSyncerTimeStepChangeEventsIndex;
 
     public int difficulty;
-    public int levelIndex;
+    public static int levelIndex;
     public float songPosInBeats;
 
     public int numberOfSamples;
