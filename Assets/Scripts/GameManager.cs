@@ -70,13 +70,15 @@ public class GameManager : MonoBehaviour
         {
             AudioListener.pause = !AudioListener.pause;
             Time.timeScale = (Time.timeScale == 0) ? 1 : 0;
-            Cursor.visible = !Cursor.visible;
-            if (Cursor.visible)
+            if (!isPaused)
             {
+
+                Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
             }
             else
             {
+                Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
             }
             Player.instance.GetComponent<PlayerMovement>().paused = !Player.instance.GetComponent<PlayerMovement>().paused;
