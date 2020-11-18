@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    public GameManager GameManager;
-    //public float sensitivity = 1.5f;
-    //public static float changeSensitivity = 1.5f; //To pass into PlayerMovement
+    //public GameManager GameManager;
+    public GameObject sensitivitySlider;
+
+    void Start()
+    {
+        if (gameObject.name == "MainMenu")
+        {
+            sensitivitySlider.GetComponent<Slider>().value = PlayerMovement.sensitivity;
+        }
+    }
 
     public void PlayGame()
     {
@@ -32,21 +40,18 @@ public class MainMenu : MonoBehaviour
 
     public void StartLevel1()
     {
-        //load 0 into some static class
         GameManager.levelIndex = 0;
         SceneManager.LoadScene("Game");
     }
 
     public void StartLevel2()
     {
-        //load 1 into some static class
         GameManager.levelIndex = 1;
         SceneManager.LoadScene("Game");
     }
 
     public void StartLevel3()
     {
-        //load 2 into some static class
         GameManager.levelIndex = 2;
         SceneManager.LoadScene("Game");
     }

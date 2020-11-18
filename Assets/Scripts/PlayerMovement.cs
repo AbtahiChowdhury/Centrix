@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerInput playerInput;
     public bool paused = false;
-    public static float sensitivity = 5;
+    public static float sensitivity = 25;
 
     private void Awake()
     {
