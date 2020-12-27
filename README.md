@@ -4,11 +4,13 @@
 
 **Team Members:** Abtahi Chowdhury, Safwan Shahid, Warin Wohab and Samuel Fils
 
-## Project Description
+___
+### Project Description
 
 The following Game Design Document provides an overview on the design and implementation details for the PC game Centrix. This game is a rhythm based bullet hell game. To survive, the player has to dodge bullets that are targeted at the player in rhythmic patterns. This concept is highly inspired by the game, Soundodger+.
 
-## Technical Description
+___
+### Technical Description
 
 - Targeted Platform
   - PC
@@ -18,13 +20,15 @@ The following Game Design Document provides an overview on the design and implem
   - Github
   - Current repository for this project is [https://github.com/AbtahiChowdhury/Centrix](https://github.com/AbtahiChowdhury/Centrix)
 
-## Player Movement and Controls
+___
+### Player Movement and Controls
 
 In a 2D coordinate system the player can move in the x-axis and y-axis. Like many keyboard games, if the WASD or arrow keys are pressed, the player moves in the corresponding direction. This also works with the mouse. For gamepad users, the left joystick can be used for movement. Only one type of movement control takes priority. The speed in which the player moves is constant. However, there is a restriction to movement. The player&#39;s movement is bounded within the circular stage.
 
 The player also has the ability to clear the stage with a bomb. By pressing the key Z or gamepad control (PS4) X, the spawned bullets are destroyed. The restriction to this ability is that the player can only use it three threes in a given level. If the player wants to pause the game, the key Esc or gamepad control (PS4) O can be pressed.
 
-## Level Design
+___
+### Level Design
 
 When the gameplay scene is loaded, a predetermined number of bullets spawners will be placed evenly around the stage. These spawners will then begin to rotate around the edge of the stage. Bullet spawning is done using these spawners. A bullet will spawn in the center of the spawner with an initial direction vector facing towards the center of the stage. The initial direction vector is then rotated by a given theta and that final vector is normalized and set as the direction the bullet will move in. The bullets themselves move in that direction with a speed that is determined by a variable in GameManager. The spawning of the bullets will happen both automatically using beat detection and manually using a series of queues. Automatic bullet spawning will occur when the AudioSyncer passes the bias variable in GameManager. Then this happens, 2 bullets are spawned with random direction. Manual Bullet spawning is done using a queue that holds the beat the bullet should be spawn in on, the spawner the bullet spawns on, and the theta offset on the normal direction vector. The bullets will destroy themselves when they exit the stage. This queue is filled at the beginning of the level with the use of various helper functions that allow the creation of patterns using various parameters.
 
@@ -38,19 +42,23 @@ Alongside the bullet queue, there are various other queues that are used to make
 
 All of these queues, alongside the bullet spawning queue, are filled with predetermined values when the scene is loaded. On each frame, the first value in each queue is checked and the event is performed accordingly.
 
-## Collision Detection
+___
+### Collision Detection
 
 Both the player and bullets have circular hitboxes at the center of the sprite. However the hitboxes will be smaller than the sprite themselves. This is done to allow the player to have more freedom of movement. If the player collides into a bullet, the bullet will change color from black to red and the accuracy will go down. If a bullet collides with a bomb, it will be destroyed.
 
-## Bomb Mechanics
+___
+### Bomb Mechanics
 
 On each level, the player is given 3 bombs to use throughout the level. They are not penalized for using it, however they do not have to use all 3 of the bombs. When the bomb is used it will spawn a circle where the player is and will begin to rapidly expand from that point. As the circle expands, any bullets it comes in contact will be destroyed. Once it reaches a certain size, the circle and bomb will be destroyed.
 
-## Beat Detection
+___
+### Beat Detection
 
 The stage &amp; spawners are 2D circle game objects that will respond to the beat of the currently playing music. The stage will perform a beat animation and the spawners will shoot bullets, creating a nice rhythmic based visual. This beat detection uses an open source Unity AudioSyncer developed by RenaissanceCode. The AudioSyncer uses an array for spectrum data that is produced from the currently playing music. This data is then used to compare loudness of the previous and current audio frame. If the difference of those two values passed a threshold it will be counted as a beat.
 
-## Scoring
+___
+### Scoring
 
 The score is calculated using 2 different formulas. One will calculate the accuracy and the other will calculate the final score of the player. The following formula will calculate the accuracy:
 
@@ -58,9 +66,7 @@ The score is calculated using 2 different formulas. One will calculate the accur
 Accuracy = Mathf.Clamp((bulletsFired - bulletsHit) / bulletsFired, 0f, 100f)
 ```
 
-When calculating accuracy the bulletsFired variable will only track the bullets fired through the automatic bullet firing through beat detection. The bullets fired manually are not counted towards the accuracy calculation. This is done to make hitting manually fired bullets more punishing than the automatically fired bullets as they are fired to surround the player and not directly hit them.
-
-The following formula will calculate the final score:
+When calculating accuracy the bulletsFired variable will only track the bullets fired through the automatic bullet firing through beat detection. The bullets fired manually are not counted towards the accuracy calculation. This is done to make hitting manually fired bullets more punishing than the automatically fired bullets as they are fired to surround the player and not directly hit them. The following formula will calculate the final score:
 
 ```csharp
 FinalScore = Mathf.Lerp(0, 1000000f, accuracy)
@@ -68,11 +74,13 @@ FinalScore = Mathf.Lerp(0, 1000000f, accuracy)
 
 This final score is then displayed to the player in an end-of-game screen.
 
-## Levels &amp; Progression
+___
+### Levels &amp; Progression
 
 The game has 3 levels for the player to choose from with each level using a different song. All 3 levels will be available for the player to choose from at all times. Once the user selects the &quot;Play&quot; option from the main menu, they have the option to choose one of these levels. A music may have high or low moments for activity, and the difficulty of the game will show this. This will make each level unique and challenging. The overall difficulty of the level will increase as the player progresses through the levels.
 
-## UI/UX
+___
+### UI/UX
 
 The main menu will consist of 3 total buttons. There will be a &quot;Play&quot; button which allows the user to select a level to play, once directed to the Level Selection Menu. There will also be a &quot;Settings&quot; button which gives the user the ability to change various settings. Lastly there will be an &quot;Quit&quot; button that closes the game.
 
@@ -82,6 +90,7 @@ If the player finishes a level, the player will see their score and accuracy dis
 
 If the player fails to survive, the player will see their score, accuracy, or health displayed and can click on three buttons. They can press the &quot;Main Menu&quot; button which directs the user to the main menu. They can also click on the &quot;Retry&quot;, which restarts the level the player just lost in. There will also be a &quot;Level Selection&quot; which directs the user to a screen where he/she can select the level of their choice. Lastly, there will be an &quot;Exit&quot; option which closes the application.
 
+___
 # Breakdown of Roles
 
 **Abtahi Chowdhury:**
