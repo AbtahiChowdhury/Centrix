@@ -192,7 +192,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0617bdc6b8217d4c9db0fc04f096c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGamepad: 0
   move: {x: 0, y: 0}
+  pausing: 0
+  exit: 0
+  bombClear: 0
 --- !u!114 &3218189718736400864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,9 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae12238ef0c0af549b2de58d4e7ded9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 3218189718736400869}
-  mouseSensitivity: 100
-  speed: 10
+  paused: 0
 --- !u!50 &3218189718736400869
 Rigidbody2D:
   serializedVersion: 4
